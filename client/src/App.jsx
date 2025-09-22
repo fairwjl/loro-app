@@ -1,46 +1,48 @@
-import { useState } from 'react'
-import Breathe from './components/Breathe'
-import Calm from './components/Calm'
-import Journal from './components/Journal'
-import SafetyPlan from './components/SafetyPlan'
-import Reasons from './components/Reasons'
-import MoodCheckin from './components/MoodCheckin'
+// client/src/App.jsx
+import { useState } from 'react';
 
-const TABS = [
-  { key: 'breathe', label: 'Breathe', component: Breathe },
-  { key: 'calm', label: 'Calm', component: Calm },
-  { key: 'journal', label: 'Journal', component: Journal },
-  { key: 'mood', label: 'Mood', component: MoodCheckin },
-  { key: 'reasons', label: 'Reasons', component: Reasons },
-  { key: 'safety', label: 'Safety', component: SafetyPlan },
-]
+import Breathe from './components/Breathe.jsx';
+import Calm from './components/Calm.jsx';
+import Journal from './components/Journal.jsx';
+import Reasons from './components/Reasons.jsx';
+import SafetyPlan from './components/SafetyPlan.jsx';
+import Effectiveness from './components/Effectiveness.jsx';
+import Mood from './components/Mood.jsx'; // <-- new full-feature mood tracker
 
-export default function App(){
-  const [tab, setTab] = useState('breathe')
-  const Active = TABS.find(t=>t.key===tab)?.component || Breathe
+export default function App() {
+  const [tab, setTab] = useState('breathe');
 
   return (
-    <div className="app">
-      <header className="topbar">
+    <div className="app-shell">
+      <header className="header">
         <div className="brand">Loro</div>
         <nav className="tabs">
-          {TABS.map(t => (
-            <button key={t.key} className={tab===t.key ? 'active' : ''} onClick={()=>setTab(t.key)}>
-              {t.label}
-            </button>
-          ))}
+          <button className={tab==='breathe'?'active':''} onClick={()=>setTab('breathe')}>Breathe</button>
+          <button className={tab==='calm'?'active':''} onClick={()=>setTab('calm')}>Calm</button>
+          <button className={tab==='journal'?'active':''} onClick={()=>setTab('journal')}>Journal</button>
+          <button className={tab==='mood'?'active':''} onClick={()=>setTab('mood')}>Mood</button>
+          <button className={tab==='reasons'?'active':''} onClick={()=>setTab('reasons')}>Reasons</button>
+          <button className={tab==='safety'?'active':''} onClick={()=>setTab('safety')}>Safety</button>
+          {/* Optional tools bucket */}
+          <button className={tab==='effectiveness'?'active':''} onClick={()=>setTab('effectiveness')}>Effectiveness</button>
         </nav>
       </header>
 
-      <main className="container">
-        <Active />
+      <main className="main">
+        {tab==='breathe' && <Breathe />}
+        {tab==='calm' && <Calm />}
+        {tab==='journal' && <Journal />}
+        {tab==='mood' && <Mood />}
+        {tab==='reasons' && <Reasons />}
+        {tab==='safety' && <SafetyPlan />}
+        {tab==='effectiveness' && <Effectiveness />}
       </main>
 
       <footer className="footer">
-        <div>
-          Crisis: In the U.S., call or text <strong>988</strong>. If in immediate danger, call <strong>911</strong>.
-        </div>
+        <small>
+          Self-help prototype — not a replacement for therapy. In the U.S., dial 988 for crises.
+        </small>
       </footer>
     </div>
-  )
+  );
 }
