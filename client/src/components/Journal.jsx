@@ -1,26 +1,32 @@
 import { useState } from 'react'
 
+const API = import.meta.env.VITE_API_URL || 'http://localhost:8787'
+
 export default function Journal(){
   const [text, setText] = useState('')
-  const [reply, setReply] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [crisis, setCrisis] = useState(null)
+  const [reply, setReply] = useState('')
 
-  async function reflect(){
-    setLoading(true); setError(''); setReply(''); setCrisis(null)
-    try{
-      const res = await fetch('http://localhost:8787/api/reflect', {
+  const reflect = async () => {
+    setLoading(true)
+    setError('')
+    setReply('')
+    try {
+      const r = await fetch(`${API}/reflect`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text })
+        body: JSON.stringify({ entry: text }),
       })
-      const data = await res.json()
-      if(!res.ok) throw new Error(data.error || 'Request failed')
-      setReply(data.reflection)
-      setCrisis(data.crisis)
+      if (!r.ok) {
+        const msg = (await r.json().catch(()=>null))?.error || r.statusText
+        throw new Error(msg || 'Request failed')
+      }
+      const data = await r.json()
+      setReply(data.reflection || '')
     } catch (e) {
-      setError(e.message)
+      console.error(e)
+      setError(e.message || 'Failed to fetch')
     } finally {
       setLoading(false)
     }
@@ -30,20 +36,24 @@ export default function Journal(){
     <section className="card">
       <h2>Journal & Reflection</h2>
       <textarea
-        placeholder="Type a few words about what you feel or notice..."
+        rows={8}
         value={text}
-        onChange={e=>setText(e.target.value)}
-        rows={6}
+        onChange={(e)=>setText(e.target.value)}
+        placeholder="Write what's on your mind..."
       />
       <div className="actions">
-        <button onClick={reflect} disabled={loading || text.trim().length<3}>
+        <button onClick={reflect} disabled={loading || !text.trim()}>
           {loading ? 'Reflecting…' : 'Reflect'}
         </button>
       </div>
 
       {error && <p className="error">{error}</p>}
-      {reply && <div className="response"><p>{reply}</p></div>}
-      {crisis && <div className="crisis">{crisis}</div>}
+      {reply && (
+        <div className="reflection">
+          <h3>Your Reflection</h3>
+          <p>{reply}</p>
+        </div>
+      )}
     </section>
   )
 }

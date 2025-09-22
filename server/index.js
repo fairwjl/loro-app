@@ -1,63 +1,66 @@
-import 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
-import OpenAI from 'openai';
+// server/index.js
+import express from "express";
+import cors from "cors";
+import "dotenv/config";
+import OpenAI from "openai";
 
 const app = express();
-const port = process.env.PORT || 8787;
 
-app.use(cors({ origin: [
-  'http://localhost:5173',
-  'http://127.0.0.1:5173'
-]}));
+// --- Config ---
+const PORT = process.env.PORT || 8787;
+const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
+const clientOrigin = process.env.CLIENT_ORIGIN || "http://localhost:5173";
+
+// --- Middleware ---
+app.use(cors({ origin: clientOrigin }));
 app.use(express.json());
 
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+// --- Health check ---
+app.get("/health", (_req, res) => {
+  res.json({ ok: true, model: OPENAI_MODEL });
+});
 
-const SYSTEM_INSTRUCTIONS = `
-You are a trauma-informed, validating assistant for a self-help app.
-- You are NOT a clinician and do not diagnose, treat, or provide crisis counseling.
-- Keep responses concise, warm, and practical (<= 170 words unless user requests more).
-- Use gentle language: normalize, validate, and offer 1–3 concrete, evidence-informed next steps (e.g., paced breathing, 5-4-3-2-1 grounding, jaw/face/forehead softening, soft gaze, near–far focus).
-- Avoid referencing branded therapies. Avoid triggering detail. Encourage professional help when appropriate.
-- If user mentions imminent harm or crisis, show a brief crisis message.
-`;
-
-function crisisLine(text = '') {
-  const t = text.toLowerCase();
-  const flags = ['suicide', 'kill myself', 'overdose', 'hurt myself', 'harm myself', 'kill him', 'kill her'];
-  return flags.some(f => t.includes(f))
-    ? 'If you are in immediate danger or considering harming yourself or others, call your local emergency number now. In the U.S., dial 988.'
-    : null;
-}
-
-// POST /api/reflect  { text: string }
-app.post('/api/reflect', async (req, res) => {
+// --- Reflection route ---
+app.post("/reflect", async (req, res) => {
   try {
-    const { text } = req.body || {};
-    if (!text || typeof text !== 'string' || text.trim().length < 3) {
-      return res.status(400).json({ error: 'Please provide a short sentence about what you are feeling or noticing.' });
+    const { entry } = req.body || {};
+    if (!entry || typeof entry !== "string") {
+      return res.status(400).json({ error: "Missing 'entry' string" });
     }
 
-    const crisis = crisisLine(text);
+    // Guard for missing API key
+    if (!process.env.OPENAI_API_KEY) {
+      return res.status(500).json({ error: "Server missing OPENAI_API_KEY" });
+    }
 
-    const response = await client.responses.create({
-      model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
-      instructions: SYSTEM_INSTRUCTIONS,
-      input: `User entry: ${text}\n\nRespond briefly (<=170 words). Include one grounding or regulation step.`
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+    const sysPrompt =
+      "You are a supportive, evidence-informed reflection helper. " +
+      "Summarize the user's journal entry in 2–3 sentences, note feelings, " +
+      "and suggest one gentle, concrete next step. Avoid clinical diagnoses.";
+
+    const resp = await openai.chat.completions.create({
+      model: OPENAI_MODEL,
+      messages: [
+        { role: "system", content: sysPrompt },
+        { role: "user", content: entry },
+      ],
+      temperature: 0.4,
     });
 
-    const output = response.output_text || 'Try a slow exhale, soften your jaw and forehead, and notice three things you can see.';
+    const reflection =
+      resp.choices?.[0]?.message?.content?.trim() ||
+      "I read your entry. I’m here with you.";
 
-    res.json({ ok: true, reflection: output, crisis });
+    res.json({ reflection });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Something went wrong generating the reflection.' });
+    console.error("Reflect error:", err);
+    res.status(500).json({ error: "Reflection failed" });
   }
 });
 
-app.get('/api/health', (_, res) => res.json({ ok: true }));
-
-app.listen(port, () => {
-  console.log(`Loro server listening on http://localhost:${port}`);
+// --- Start ---
+app.listen(PORT, () => {
+  console.log(`Loro server running on http://localhost:${PORT}`);
 });
