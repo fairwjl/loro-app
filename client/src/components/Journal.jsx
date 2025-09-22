@@ -1,12 +1,33 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { encryptJSON, decryptJSON } from '../lib/crypto'   // ← TEMP: for quick passphrase test
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8787'
+
+// ---- TEMP TEST (you can delete this block after verifying) ----
+async function testCrypto() {
+  try {
+    const data = { note: 'test entry' }
+    const pass = 'abcd' // 4 characters (new minimum)
+    const encrypted = await encryptJSON(data, pass)
+    console.log('Encrypted OK:', encrypted)
+    const decrypted = await decryptJSON(encrypted, pass)
+    console.log('Decrypted OK:', decrypted)
+  } catch (err) {
+    console.error('Crypto test failed:', err)
+  }
+}
+// ---------------------------------------------------------------
 
 export default function Journal(){
   const [text, setText] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [reply, setReply] = useState('')
+
+  // TEMP: run the crypto test once on mount
+  useEffect(() => {
+    testCrypto() // ← TEMP: remove after you see "Encrypted OK" and "Decrypted OK" in the console
+  }, [])
 
   const reflect = async () => {
     setLoading(true)
