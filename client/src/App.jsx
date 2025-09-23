@@ -2,7 +2,7 @@
 import { Routes, Route } from "react-router-dom";
 import AppShell from "./ui/AppShell";
 
-import Home from "./pages/Home";
+import Home from "./pages/Home.jsx";
 import BreathingPage from "./pages/BreathingPage";
 import BilateralPage from "./pages/BilateralPage";
 import WorksheetsPage from "./pages/WorksheetsPage";
