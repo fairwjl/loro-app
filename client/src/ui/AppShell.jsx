@@ -1,66 +1,51 @@
-// client/src/ui/AppShell.jsx
+// src/ui/AppShell.jsx
 import React from "react";
+import { Link, useLocation } from "react-router-dom";
+
+const navItems = [
+  { to: "/", label: "Home" },
+  { to: "/breathing", label: "Breathing" },
+  { to: "/bilateral", label: "Bilateral" },
+  { to: "/safety-plan", label: "Safety Plan" },
+  { to: "/journal", label: "Journal" },
+  { to: "/worksheets", label: "Worksheets" },
+];
 
 export default function AppShell({ children }) {
+  const { pathname } = useLocation();
+
   return (
     <div className="app-shell">
-      <header
-        className="topbar"
-        role="banner"
-        style={{
-          padding: "12px 20px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          background:
-            "linear-gradient(180deg, rgba(143,211,197,0.35) 0%, rgba(143,211,197,0) 100%)",
-        }}
-      >
-        {/* Brand (left) */}
-        <a
-          href="/"
-          className="brand"
-          style={{ display: "flex", alignItems: "center", gap: 10 }}
-        >
-          <span
-            aria-hidden="true"
-            style={{
-              display: "inline-flex",
-              width: 22,
-              height: 22,
-              borderRadius: "50%",
-              background: "#8fd3c5",
-              boxShadow: "0 0 0 2px #256f5b inset",
-            }}
-          />
-          <span className="brand-name" style={{ fontWeight: 600, color: "#2f3a40" }}>
-            Loro
-          </span>
-        </a>
+      {/* Top bar / Header */}
+      <header className="site-header">
+        <div className="header-inner">
+          <Link to="/" className="brand">
+            <span className="brand-mark">★</span>
+            <span className="brand-name">Loro</span>
+          </Link>
 
-        {/* Nav (right) */}
-        <nav
-          className="topnav"
-          role="navigation"
-          aria-label="Primary"
-          style={{ display: "flex", gap: "24px" }}
-        >
-          <a href="/">Home</a>
-          <a href="/breathe">Breathing</a>
-          <a href="/bls">Bilateral</a>
-          <a href="/safety">Safety Plan</a>
-          <a href="/journal">Journal</a>
-        </nav>
+          <nav className="main-nav" aria-label="Main">
+            {navItems.map((item) => {
+              const isActive =
+                item.to === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(item.to);
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className={`nav-link ${isActive ? "active" : ""}`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
       </header>
 
       {/* Page content */}
-      <main role="main" className="page" style={{ minHeight: "60vh" }}>
-        {children}
-      </main>
-
-      <footer role="contentinfo" style={{ padding: "16px 20px", opacity: 0.7 }}>
-        {/* optional footer */}
-      </footer>
+      <main className="page-container">{children}</main>
     </div>
   );
 }
