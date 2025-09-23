@@ -1,17 +1,17 @@
-// src/App.jsx
+// client/src/App.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import AppShell from "./ui/AppShell.jsx";
+import AppShell from "./ui/AppShell";
 
-// NOTE: Your folder is "Pages" (capital P) — keep this exact casing.
-import Home from "./Pages/Home.jsx";
-import BreathingPage from "./Pages/BreathingPage.jsx";
-import BilateralPage from "./Pages/BilateralPage.jsx";
-import SafetyPlanPage from "./Pages/SafetyPlanPage.jsx";
-import JournalPage from "./Pages/JournalPage.jsx";
-import WorksheetsPage from "./Pages/WorksheetsPage.jsx";
+// NOTE: all imports use "./pages/..." (lowercase)
+import Home from "./pages/Home.jsx";
+import BreathingPage from "./pages/BreathingPage.jsx";
+import BilateralPage from "./pages/BilateralPage.jsx";
+import SafetyPlanPage from "./pages/SafetyPlanPage.jsx";
+import JournalPage from "./pages/JournalPage.jsx";
+import WorksheetsPage from "./pages/WorksheetsPage.jsx";
 
-export default function App() {
+function App() {
   return (
     <Router>
       <AppShell>
@@ -27,3 +27,5 @@ export default function App() {
     </Router>
   );
 }
+
+export default App;
