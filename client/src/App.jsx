@@ -1,29 +1,33 @@
 // client/src/App.jsx
-import { Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AppShell from "./ui/AppShell.jsx";
-import Home from "./pages/Home.jsx";
 
-// Your existing tools
-import Breathe from "./components/Breathe.jsx";
-import BLS from "./components/BLS.jsx";
-import Journal from "./components/Journal.jsx";
-import SafetyPlan from "./components/SafetyPlan.jsx";
-import Mood from "./components/Mood.jsx";
-import Effectiveness from "./components/Effectiveness.jsx";
+// Import pages using the exact filenames you have
+import Home from "./pages/Home.jsx";
+import Breathing from "./pages/BreathingPage.jsx";
+import Bilateral from "./pages/BilateralPage.jsx";
+import SafetyPlan from "./pages/SafetyPlanPage.jsx";
+import Journal from "./pages/JournalPage.jsx";
+import Worksheets from "./pages/WorksheetsPage.jsx";
 
 export default function App() {
   return (
-    <AppShell>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/breathe" element={<Breathe />} />
-        <Route path="/bls" element={<BLS />} />
-        <Route path="/journal" element={<Journal />} />
-        <Route path="/safety" element={<SafetyPlan />} />
-        <Route path="/mood" element={<Mood />} />
-        <Route path="/effectiveness" element={<Effectiveness />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </AppShell>
+    <BrowserRouter>
+      <AppShell>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Navigate to="/" replace />} />
+
+          <Route path="/breathing" element={<Breathing />} />
+          <Route path="/bilateral" element={<Bilateral />} />
+          <Route path="/safety-plan" element={<SafetyPlan />} />
+          <Route path="/journal" element={<Journal />} />
+          <Route path="/worksheets" element={<Worksheets />} />
+
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AppShell>
+    </BrowserRouter>
   );
 }
