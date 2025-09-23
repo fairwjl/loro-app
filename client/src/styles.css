@@ -1,177 +1,145 @@
-/* client/src/styles.css */
+/* Global Styles for Loro */
 
-/* ====== Base + Theme ====== */
-:root{
-  --bg-0:#0b1320;         /* page */
-  --bg-1:#101a2b;         /* panels */
-  --bg-2:#0f1725;         /* sunken */
-  --text-0:#e6f0ff;       /* primary */
-  --text-1:#9db2cf;       /* secondary */
-  --muted:#7e8ca6;
-  --border:#20314d;
-  --accent:#22d3ee;       /* cyan */
-  --accent-2:#8b5cf6;     /* purple */
-  --danger:#ef4444;
-  --ok:#22c55e;
-  --focus: 0 0 0 3px rgba(34,211,238,.35);
-  --radius:16px;
-  --radius-sm:12px;
-  --shadow-1: 0 10px 30px rgba(0,0,0,.35);
-  --shadow-2: 0 6px 18px rgba(0,0,0,.25);
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap');
+
+:root {
+  --color-bg: #f9f9f7;
+  --color-surface: #ffffff;
+  --color-accent: #6bb48d; /* soft calming green */
+  --color-accent-dark: #4a8f6a;
+  --color-text: #333333;
+  --color-subtext: #555555;
+  --radius: 10px;
+  --shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
-*{ box-sizing:border-box; }
-html,body,#root{ height:100%; }
-html,body{
-  margin:0;
-  background: var(--bg-0);
-  color: var(--text-0);
-  font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "SF Pro Text", Inter, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Nunito', sans-serif;
 }
 
-/* ====== App Shell ====== */
-.app{
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 24px 20px 56px;
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
 }
 
-.header{
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  backdrop-filter: saturate(120%) blur(6px);
-  background: linear-gradient(to bottom, rgba(11,19,32,.85), rgba(11,19,32,.55) 70%, transparent);
-  margin: -24px -20px 20px;
-  padding: 18px 20px 10px;
-  border-bottom: 1px solid rgba(32,49,77,.35);
+/* Header */
+.site-header {
+  background: var(--color-surface);
+  padding: 1rem 2rem;
+  box-shadow: var(--shadow);
 }
 
-.brand-row{
-  display:flex; align-items:center; gap:12px; margin-bottom:10px;
-}
-.brand{
-  display:inline-flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.2px;
-}
-.brand-badge{
-  width:28px; height:28px; border-radius:10px;
-  background: radial-gradient(60% 60% at 30% 30%, var(--accent) 0%, #59e3f5 45%, #1ca7bb 100%);
-  box-shadow: 0 0 0 4px rgba(34,211,238,.15), 0 6px 14px rgba(34,211,238,.25);
+.site-header .brand-name {
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: var(--color-accent-dark);
 }
 
-/* Tabs */
-.tabs{
-  display:flex; flex-wrap: wrap; gap:8px;
-}
-.tab{
-  all:unset;
-  cursor:pointer;
-  padding:8px 14px;
-  border-radius: 999px;
-  color: var(--text-1);
-  border: 1px solid transparent;
-  background: transparent;
-  transition: .15s ease;
-}
-.tab:hover{ color:var(--text-0); border-color: rgba(255,255,255,.08); }
-.tab.active{
-  color:#00111a;
-  background: linear-gradient(180deg, var(--accent) 0%, #63e6f7 100%);
-  box-shadow: var(--shadow-2);
+.site-header nav a {
+  text-decoration: none;
+  font-weight: 500;
+  color: var(--color-subtext);
+  transition: color 0.2s ease;
 }
 
-/* ====== Layout ====== */
-.grid{
-  display:grid;
-  grid-template-columns: 1fr;
-  gap:16px;
-}
-@media (min-width: 860px){
-  .grid{ grid-template-columns: 1.2fr 1fr; }
+.site-header nav a:hover,
+.site-header nav a.active {
+  color: var(--color-accent-dark);
 }
 
-/* Card */
-.card{
-  background: linear-gradient(180deg, var(--bg-1), var(--bg-2));
-  border: 1px solid var(--border);
+/* Section cards */
+.page-section {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--color-surface);
   border-radius: var(--radius);
-  box-shadow: var(--shadow-1);
-  padding: 18px;
-}
-.card h2{
-  margin: 0 0 10px;
-  font-size: 20px;
-  letter-spacing:.2px;
-}
-h3{ margin:16px 0 8px; }
-
-/* Text */
-.muted{ color:var(--text-1); }
-.note{ color:var(--muted); font-size:.95rem; }
-
-/* Inputs */
-input, textarea, select{
-  width:100%;
-  color: var(--text-0);
-  background:#0b1220;
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:10px 12px;
-  outline:none;
-  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
-}
-textarea{ resize: vertical; }
-input[type="range"]{ padding:0; background:transparent; }
-input:focus, textarea:focus, select:focus{
-  border-color: var(--accent);
-  box-shadow: var(--focus);
-  background:#0b1324;
-}
-label{ display:flex; flex-direction:column; gap:8px; }
-
-/* Actions */
-.actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-button{
-  all:unset; cursor:pointer;
-  background: linear-gradient(180deg, var(--accent), #55e0f4);
-  color:#001119; font-weight:600;
-  padding:10px 14px; border-radius:12px;
-  box-shadow: var(--shadow-2);
-  transition: transform .06s ease, filter .15s ease;
-}
-button:active{ transform: translateY(1px) scale(.99); }
-button.secondary{
-  background: linear-gradient(180deg, #1d2a44, #152034);
-  color: var(--text-0); border: 1px solid var(--border);
-}
-button.danger{ background: linear-gradient(180deg, #ff6363, #ef4444); color:#160b0b; }
-
-/* Lists */
-.list{ display:flex; flex-direction:column; gap:8px; }
-.list-row{
-  display:flex; gap:12px; align-items:center;
-  background: #0d1526; border:1px solid var(--border);
-  border-radius: 12px; padding:10px 12px;
+  box-shadow: var(--shadow);
 }
 
-/* Small helpers */
-.kicker{ font-size:.95rem; color:var(--text-1); margin-bottom:12px; }
-.footer{
-  margin-top: 22px; padding-top: 12px;
-  border-top:1px dashed var(--border);
-  color: var(--muted); font-size:.95rem;
+/* Headings */
+h1, h2, h3 {
+  color: var(--color-accent-dark);
+  margin-bottom: 1rem;
 }
 
-/* Form grids used by multiple tools */
-.form-grid{
-  display:grid; gap: 12px;
-  grid-template-columns: 1fr;
+/* Buttons */
+button, .btn {
+  background: var(--color-accent);
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.6rem 1.2rem;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
-@media (min-width: 720px){
-  .form-grid{ grid-template-columns: 1fr 1fr; }
+
+button:hover, .btn:hover {
+  background: var(--color-accent-dark);
 }
-.form-grid > label[style*="grid-column:1 / -1"]{
-  grid-column: 1 / -1; /* ensure full width overrides still work */
+
+/* Forms */
+textarea, input {
+  border: 1px solid #ddd;
+  border-radius: var(--radius);
+  padding: 0.6rem;
+  width: 100%;
+  font-family: inherit;
+  font-size: 1rem;
+}
+/* ===== Top navigation (calm style) ===== */
+.topbar,
+header .topnav,
+nav.topnav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* If brand (logo/title) and nav share a row, space them apart */
+.topbar {
+  justify-content: space-between;
+}
+
+/* Right-aligned nav when .topnav sits next to the brand */
+header .topnav,
+nav.topnav {
+  margin-left: auto;
+}
+
+/* Soft, calm link style only for the header nav */
+.topnav a {
+  color: #4b5563;                /* soft gray (like Tailwind gray-700) */
+  text-decoration: none;         /* remove underline */
+  font-weight: 300;              /* light weight = calmer */
+  font-size: 1rem;               /* readable, not shouty */
+  letter-spacing: 0.1px;         /* tiny spacing for a gentle feel */
+  padding: 6px 2px;              /* small tap target without looking like a button */
+  border-bottom: 2px solid transparent; /* subtle hover affordance */
+  transition: color 180ms ease, border-color 180ms ease, opacity 180ms ease;
+}
+
+/* Hover/focus: calm green accent, subtle underline via border */
+.topnav a:hover,
+.topnav a:focus-visible {
+  color: #256f5b;                /* calm green (close to your hero/button accent) */
+  border-bottom-color: #92c7b6;  /* light mint underline on hover */
+  outline: none;
+}
+
+/* Active/current page (if you set aria-current="page") */
+.topnav a[aria-current="page"] {
+  color: #256f5b;
+  border-bottom-color: #92c7b6;
+  font-weight: 400;              /* tiny nudge to stand out */
+}
+
+/* Optional: tone down visited color so it doesn’t turn purple */
+.topnav a:visited {
+  color: #4b5563;
 }
