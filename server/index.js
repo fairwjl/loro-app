@@ -12,7 +12,8 @@ const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
 const clientOrigin = process.env.CLIENT_ORIGIN || "http://localhost:5173";
 
 // --- Middleware ---
-app.use(cors({ origin: clientOrigin }));
+app.use(cors());                 // allow all origins during testing
+app.options('*', cors());        // ensure preflight (OPTIONS) gets CORS headers
 app.use(express.json());
 
 // --- Health check ---
