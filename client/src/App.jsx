@@ -3,12 +3,12 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AppShell from "./ui/AppShell.jsx";
 
 // Import pages using the exact filenames you have
-import Home from "./pages/Home.jsx";
-import Breathing from "./pages/BreathingPage.jsx";
-import Bilateral from "./pages/BilateralPage.jsx";
-import SafetyPlan from "./pages/SafetyPlanPage.jsx";
-import Journal from "./pages/JournalPage.jsx";
-import Worksheets from "./pages/WorksheetsPage.jsx";
+import Home from "./pages/Home";
+import BreathingPage from "./pages/BreathingPage";
+import BilateralPage from "./pages/BilateralPage";
+import WorksheetsPage from "./pages/WorksheetsPage";
+import SafetyPlanPage from "./pages/SafetyPlanPage";
+import JournalPage from "./pages/JournalPage";
 
 export default function App() {
   return (
