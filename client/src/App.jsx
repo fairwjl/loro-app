@@ -1,8 +1,8 @@
 // client/src/App.jsx
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import AppShell from "./ui/AppShell.jsx";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AppShell from "./ui/AppShell";
 
-// Import pages using the exact filenames you have
+// NOTE: no ".jsx" extensions in these imports
 import Home from "./pages/Home";
 import BreathingPage from "./pages/BreathingPage";
 import BilateralPage from "./pages/BilateralPage";
@@ -16,16 +16,13 @@ export default function App() {
       <AppShell>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Navigate to="/" replace />} />
-
-          <Route path="/breathing" element={<Breathing />} />
-          <Route path="/bilateral" element={<Bilateral />} />
-          <Route path="/safety-plan" element={<SafetyPlan />} />
-          <Route path="/journal" element={<Journal />} />
-          <Route path="/worksheets" element={<Worksheets />} />
-
-          {/* Fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/breathing" element={<BreathingPage />} />
+          <Route path="/bilateral" element={<BilateralPage />} />
+          <Route path="/worksheets" element={<WorksheetsPage />} />
+          <Route path="/safety" element={<SafetyPlanPage />} />
+          <Route path="/journal" element={<JournalPage />} />
+          {/* catch-all: send unknown routes to Home (optional) */}
+          <Route path="*" element={<Home />} />
         </Routes>
       </AppShell>
     </BrowserRouter>
