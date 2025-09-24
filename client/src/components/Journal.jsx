@@ -16,11 +16,13 @@ export default function Journal() {
 
   return (
     <div className="page-section">
-      <h2>Your Journal</h2>
+      <h2>Reflections</h2>
       <p>
-        A quiet space to process your thoughts and feelings. Write freely, then
-        get a gentle reflection grounded in supportive, evidence-informed
-        guidance.
+        <p>
+  A quiet space for reflections. Write freely, then
+  receive gentle feedback grounded in supportive, evidence-informed
+  guidance.
+</p>
       </p>
 
       <section className="card">
@@ -38,7 +40,7 @@ export default function Journal() {
 
         {reply && (
           <div className="reflection">
-            <h3>Your Reflection</h3>
+            <h3>Your Reflections</h3>
             <p>{reply}</p>
           </div>
         )}

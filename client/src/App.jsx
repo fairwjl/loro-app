@@ -8,7 +8,7 @@ import Home from "./pages/Home.jsx";
 import BreathingPage from "./pages/BreathingPage.jsx";
 import BilateralPage from "./pages/BilateralPage.jsx";
 import SafetyPlanPage from "./pages/SafetyPlanPage.jsx";
-import JournalPage from "./pages/JournalPage.jsx";
+import ReflectionsPage from "./pages/ReflectionsPage.jsx";
 import WorksheetsPage from "./pages/WorksheetsPage.jsx";
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
           <Route path="/breathing" element={<BreathingPage />} />
           <Route path="/bilateral" element={<BilateralPage />} />
           <Route path="/safety-plan" element={<SafetyPlanPage />} />
-          <Route path="/journal" element={<JournalPage />} />
+          <Route path="/reflections" element={<ReflectionsPage />} />
           <Route path="/worksheets" element={<WorksheetsPage />} />
         </Routes>
       </AppShell>
