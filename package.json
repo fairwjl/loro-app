@@ -1,5 +1,12 @@
 {
+  "name": "loro-root",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
+    "start": "npm run dev --prefix server",
+    "deploy": "vercel --prod --force"
+  },
   "devDependencies": {
-    "vercel": "^48.1.1"
+    "concurrently": "^9.2.1"
   }
 }

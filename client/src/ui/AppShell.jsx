@@ -7,6 +7,7 @@ const navItems = [
   { to: "/breathing", label: "Breathing" },
   { to: "/bilateral", label: "Bilateral" },
   { to: "/safety-plan", label: "Safety Plan" },
+  { to: "/reflections", label: "Reflections" },
   { to: "/journal", label: "Journal" },
   { to: "/worksheets", label: "Worksheets" },
 ];

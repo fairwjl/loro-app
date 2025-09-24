@@ -60,7 +60,26 @@ app.post("/reflect", async (req, res) => {
     res.status(500).json({ error: "Reflection failed" });
   }
 });
+// --- Debug: Verify API key is wired ---
+app.get("/whoami", async (_req, res) => {
+  try {
+    if (!process.env.OPENAI_API_KEY) {
+      return res.status(500).json({ error: "Missing OPENAI_API_KEY" });
+    }
 
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const models = await openai.models.list(); // lightweight call
+
+    res.json({
+      ok: true,
+      usingKey: process.env.OPENAI_API_KEY.slice(0, 8) + "...",
+      modelCount: models.data?.length || 0,
+    });
+  } catch (err) {
+    console.error("whoami error:", err.message);
+    res.status(500).json({ error: "API key test failed" });
+  }
+});
 // --- Start ---
 app.listen(PORT, () => {
   console.log(`Loro server running on http://localhost:${PORT}`);
