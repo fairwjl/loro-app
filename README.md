@@ -49,3 +49,7 @@ It offers grounding tools, journaling with AI reflections, a mood tracker with l
 ```bash
 git clone git@github.com:fairwjl/loro-app.git
 cd loro
+
+Test: PR protection check — no code changes.
+
+Smoke test PR at 2025-09-25 02:57 UTC
