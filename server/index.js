@@ -81,6 +81,23 @@ app.get("/whoami", async (_req, res) => {
   }
 });
 // --- Start ---
-app.listen(PORT, () => {
+// Lock the server to a single, known port (default 8787). If it's in use, fail fast
+// with a clear message instead of silently switching ports (prevents client/server drift).
+const server = app.listen(PORT, () => {
   console.log(`Loro server running on http://localhost:${PORT}`);
+});
+
+server.on("error", (err) => {
+  if (err && err.code === "EADDRINUSE") {
+    console.error(
+      `\nPort ${PORT} is already in use.\n` +
+      `Close the process using it and try again.\n\n` +
+      `macOS example:\n` +
+      `  lsof -ti:${PORT} -sTCP:LISTEN | xargs kill -9\n`
+    );
+    process.exit(1);
+  } else {
+    console.error("Server failed to start:", err);
+    process.exit(1);
+  }
 });
