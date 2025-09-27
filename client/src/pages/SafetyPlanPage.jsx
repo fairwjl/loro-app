@@ -209,7 +209,43 @@ export default function SafetyPlanPage() {
   }
 
   return (
-    <div>
+    <div id="safety-plan-page">
+      {/* Scoped print styles for Safety Plan only */}
+      <style>{`
+        @media print {
+          body > *:not(#safety-plan-page) { display: none !important; }
+          #safety-plan-page { display: block !important; }
+          @page { margin: 12mm; }
+
+          #safety-plan-page {
+            color: #000 !important;
+            background: #fff !important;
+          }
+
+          #safety-plan-page .btn,
+          #safety-plan-page .controls-row,
+          #safety-plan-page nav,
+          #safety-plan-page footer {
+            display: none !important;
+          }
+
+          #safety-plan-page .panel {
+            box-shadow: none !important;
+            border: 1px solid #000 !important;
+          }
+
+          #safety-plan-page input,
+          #safety-plan-page textarea {
+            border: 1px solid #000 !important;
+          }
+
+          #safety-plan-page a::after {
+            content: " (" attr(href) ")";
+            font-size: 10px;
+          }
+        }
+      `}</style>
+
       <h2 className="section-title">Safety Plan</h2>
       <p className="card-text">
         Create a personal plan for staying safe during tough moments. This plan is for{" "}
@@ -269,7 +305,7 @@ export default function SafetyPlanPage() {
           <button
             type="button"
             className="btn btn-primary"
-            onClick={() => save(plan)} // triggers timestamp and save
+            onClick={() => save(plan)}
           >
             Save
           </button>
@@ -282,7 +318,6 @@ export default function SafetyPlanPage() {
         </div>
       </form>
 
-      {/* Compact disclaimer at the bottom */}
       <div
         style={{
           backgroundColor: "#f7f7f7",
