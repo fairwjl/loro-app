@@ -46,6 +46,12 @@ export default function Journal() {
         grounded in supportive, evidence-informed guidance.
       </p>
 
+      {/* NEW: gentle safety microcopy */}
+      <p className="note" style={{ marginTop: 6, color: "#4a5e54" }}>
+        If emotions rise while writing, it’s okay to pause and try a grounding step
+        (for example, 5-4-3-2-1, a short walk, or a few slow breaths). Resume when ready.
+      </p>
+
       <div className="panel">
         <div className="form-row">
           <label htmlFor="reflection-input" className="sr-only">
