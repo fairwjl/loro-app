@@ -1,17 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 /**
- * Safety Plan (Stanley–Brown) – Local-only MVP
- * Sections:
- * 1) Warning signs
- * 2) Internal coping strategies
- * 3) People & places for distraction
- * 4) People to ask for help (names + phone/email)
- * 5) Professionals / agencies (therapist, clinic, 988, 911)
- * 6) Means safety (steps to make environment safer)
- *
- * Storage: localStorage only (no cloud). User can export/print.
- * NOTE: This is educational/self-management support, not treatment.
+ * Safety Plan (Stanley–Brown) – Local-only MVP with print polish
+ * Storage: localStorage only (no cloud). Export via browser Print dialog.
  */
 
 const STORAGE_KEY = "loro_safety_plan_v1";
@@ -209,7 +200,46 @@ export default function SafetyPlanPage() {
   }
 
   return (
-    <div>
+    <div id="safety-plan-page">
+      {/* Scoped print styles for Safety Plan only */}
+      <style>{`
+        @media print {
+          /* Print only this page content */
+          body > *:not(#safety-plan-page) { display: none !important; }
+          #safety-plan-page { display: block !important; }
+
+          @page { margin: 12mm; }
+
+          #safety-plan-page {
+            color: #000 !important;
+            background: #fff !important;
+          }
+
+          #safety-plan-page .btn,
+          #safety-plan-page .controls-row,
+          #safety-plan-page nav,
+          #safety-plan-page footer {
+            display: none !important;
+          }
+
+          #safety-plan-page .panel {
+            box-shadow: none !important;
+            border: 1px solid #000 !important;
+          }
+
+          #safety-plan-page input,
+          #safety-plan-page textarea {
+            border: 1px solid #000 !important;
+          }
+
+          /* Show link URLs in print for clarity */
+          #safety-plan-page a::after {
+            content: " (" attr(href) ")";
+            font-size: 10px;
+          }
+        }
+      `}</style>
+
       <h2 className="section-title">Safety Plan</h2>
       <p className="card-text">
         Create a personal plan for staying safe during tough moments. This plan is for{" "}
