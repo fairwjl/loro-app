@@ -16,8 +16,8 @@
   justify-content: space-between;
 }
 .brand { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
-.brand-mark { color: #3a8d6d; }
-.brand-name { font-weight: 700; color: #2e4d43; }
+.brand-mark { color: #3a8d6d; font-family: "Nunito Sans", sans-serif; }
+.brand-name { font-weight: 700; color: #2e4d43; font-family: "Nunito Sans", sans-serif; }
 
 .main-nav { display: flex; gap: 18px; }
 .nav-link {
@@ -26,6 +26,7 @@
   font-weight: 500;
   padding: 6px 4px;
   border-radius: 6px;
+  font-family: "Nunito Sans", sans-serif;
 }
 .nav-link:hover { background: #eff6f3; }
 .nav-link.active { color: #1f7a5a; background: #e6f2ed; }
@@ -38,47 +39,49 @@
   border-radius: 12px;
   background: linear-gradient(180deg, #b9dccd, #eaf4f0 70%);
   text-align: center;
+  font-family: "Nunito Sans", sans-serif;
 }
-.hero-title { font-size: 36px; color: #2f4f46; margin: 0 0 12px; }
-.hero-subtitle { color: #516e64; max-width: 780px; margin: 0 auto 16px; }
+.hero-title { font-size: 36px; color: #2f4f46; margin: 0 0 12px; font-family: "Nunito Sans", sans-serif; }
+.hero-subtitle { color: #516e64; max-width: 780px; margin: 0 auto 16px; font-family: "Nunito Sans", sans-serif; }
 
 /* Cards / panels / forms (short) */
-.section-title { margin: 28px 0 16px; color: #2f4f46; }
+.section-title { margin: 28px 0 16px; color: #2f4f46; font-family: "Nunito Sans", sans-serif; }
 .card-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 16px; }
-.card { background: #fff; border: 1px solid #e7edea; border-radius: 12px; padding: 16px; }
+.card { background: #fff; border: 1px solid #e7edea; border-radius: 12px; padding: 16px; font-family: "Nunito Sans", sans-serif; }
 .card-icon { font-size: 22px; }
-.card-title { margin: 8px 0; color: #2f4f46; }
-.card-text { color: #516e64; }
+.card-title { margin: 8px 0; color: #2f4f46; font-family: "Nunito Sans", sans-serif; }
+.card-text { color: #516e64; font-family: "Nunito Sans", sans-serif; }
 
-.panel { background: #fff; border: 1px solid #e7edea; border-radius: 12px; padding: 16px; margin-top: 16px; }
+.panel { background: #fff; border: 1px solid #e7edea; border-radius: 12px; padding: 16px; margin-top: 16px; font-family: "Nunito Sans", sans-serif; }
 .two-col { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 16px; margin-top: 16px; }
 @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
 
 .form-row { display: grid; gap: 6px; margin: 12px 0; }
-.form-row input[type="range"], .form-row input, .form-row textarea, select { width: 100%; }
-.note { color: #627e74; font-size: 14px; }
+.form-row input[type="range"], .form-row input, .form-row textarea, select { width: 100%; font-family: "Nunito Sans", sans-serif; }
+.note { color: #627e74; font-size: 14px; font-family: "Nunito Sans", sans-serif; }
 
 .controls-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
-.btn { background: #eef4f1; border: 1px solid #dbe7e2; padding: 8px 12px; border-radius: 8px; }
+.btn { background: #eef4f1; border: 1px solid #dbe7e2; padding: 8px 12px; border-radius: 8px; font-family: "Nunito Sans", sans-serif; }
 .btn:hover { background: #e6f1ec; }
-.btn-primary { background: #2f7a5c; color: white; border-color: #2b6e54; }
+.btn-primary { background: #2f7a5c; color: white; border-color: #2b6e54; font-family: "Nunito Sans", sans-serif; }
 .btn-primary:hover { background: #2a6f54; }
-.btn-ghost { background: #fff; border: 1px solid #dfe9e4; }
+.btn-ghost { background: #fff; border: 1px solid #dfe9e4; font-family: "Nunito Sans", sans-serif; }
 
-.banner { text-align: center; padding: 28px 12px 18px; background: linear-gradient(180deg,#b9dccd,#eaf4f0 70%); border-radius: 12px; }
+.banner { text-align: center; padding: 28px 12px 18px; background: linear-gradient(180deg,#b9dccd,#eaf4f0 70%); border-radius: 12px; font-family: "Nunito Sans", sans-serif; }
 .banner-icon { font-size: 26px; margin-bottom: 6px; }
-.bullets { padding-left: 18px; }
-.numbered { padding-left: 18px; }
+.bullets { padding-left: 18px; font-family: "Nunito Sans", sans-serif; }
+.numbered { padding-left: 18px; font-family: "Nunito Sans", sans-serif; }
 .mt { margin-top: 12px; }
 
 /* BLS canvas */
-.canvas-wrap { background: #f6faf8; border: 1px solid #e5ece8; border-radius: 12px; padding: 8px; }
+.canvas-wrap { background: #f6faf8; border: 1px solid #e5ece8; border-radius: 12px; padding: 8px; font-family: "Nunito Sans", sans-serif; }
 .bls-canvas { display: block; width: 100%; height: auto; border-radius: 8px; background: #fefefe; }
 
 /* Breathing animation (simple placeholder) */
-.breath-circle { position: relative; height: 260px; border-radius: 12px; background: #f6faf8; border: 1px solid #e5ece8; display: grid; place-items: center; }
+.breath-circle { position: relative; height: 260px; border-radius: 12px; background: #f6faf8; border: 1px solid #e5ece8; display: grid; place-items: center; font-family: "Nunito Sans", sans-serif; }
 .breath-circle .dot { width: 18px; height: 18px; background: #3a8d6d; border-radius: 50%; }
-.breath-circle .label { position: absolute; bottom: 12px; color: #2f4f46; font-weight: 600; }
+.breath-circle .label { position: absolute; bottom: 12px; color: #2f4f46; font-weight: 600; font-family: "Nunito Sans", sans-serif; }
+
 /* ---------- Home (Landing) ---------- */
 :root{
   --brandGreen-1:#98cdb3;      /* light */
@@ -100,10 +103,12 @@
   background: linear-gradient(180deg, var(--brandGreen-2) 0%, var(--brandGreen-1) 100%);
   color: #fff;
   padding: 56px 0 64px;
+  font-family: "Nunito Sans", sans-serif;
 }
 
 .hero-inner{
   text-align: center;
+  font-family: "Nunito Sans", sans-serif;
 }
 
 .brand-row{
@@ -111,179 +116,61 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 24px;
+  font-family: "Nunito Sans", sans-serif;
 }
 
-.brand-mark{
-  display:flex; align-items:center; gap:10px;
-  font-weight: 700;
-}
+.brand-mark{ font-weight: 700; font-family: "Nunito Sans", sans-serif; }
+.brand-icon{ font-family: "Nunito Sans", sans-serif; }
+.brand-text{ font-size: 20px; color:#eef6f3; font-family: "Nunito Sans", sans-serif; }
 
-.brand-icon{
-  display:inline-grid; place-items:center;
-  width: 36px; height: 36px; border-radius: 50%;
-  background: #eaf6f2; color: var(--brandGreen-2);
-  font-size: 18px;
-}
+.hero-title{ font-family: "Nunito Sans", sans-serif; }
+.hero-sub{ font-family: "Nunito Sans", sans-serif; }
 
-.brand-text{
-  font-size: 20px;
-  color:#eef6f3;
-}
-
-.hero-title{
-  font-size: clamp(32px, 6vw, 48px);
-  line-height: 1.15;
-  margin: 6px 0 10px;
-  font-weight: 800;
-}
-
-.hero-sub{
-  max-width: 820px;
-  margin: 0 auto 22px;
-  font-size: 16px;
-  line-height: 1.6;
-  color: #edf6f2;
-}
-
-.btn-primary{
-  display:inline-block;
-  padding: 10px 18px;
-  border-radius: 8px;
-  background: #2f7c5f;
-  color:#fff; text-decoration:none; font-weight:600;
-  border: 1px solid rgba(0,0,0,0.05);
-}
-.btn-primary:hover{ filter: brightness(1.05); }
-
+.btn-primary{ font-family: "Nunito Sans", sans-serif; }
 .hero-cta{ margin-top: 8px; }
 
 /* ---------- Quick Access ---------- */
-.quick-tools{
-  padding: 28px 0 56px;
+.quick-tools{ padding: 28px 0 56px; font-family: "Nunito Sans", sans-serif; }
+
+.section-heading{ text-align: center; font-size: 22px; font-weight: 700; color: var(--ink); margin: 10px 0 24px; position: relative; font-family: "Nunito Sans", sans-serif; }
+.section-heading span{ display:inline-block; border-bottom: 3px solid var(--ring); padding: 0 2px 6px; }
+
+.tool-card{ background: var(--surface); border: 1px solid var(--ring); border-radius: 14px; padding: 22px; box-shadow: 0 1px 0 rgba(0,0,0,0.03); font-family: "Nunito Sans", sans-serif; }
+.tool-icon{ font-family: "Nunito Sans", sans-serif; }
+.tool-title{ text-align:center; margin: 2px 0 8px; font-size: 18px; color: var(--ink); font-family: "Nunito Sans", sans-serif; }
+.tool-copy{ text-align:center; color: var(--ink-muted); font-size: 14px; line-height: 1.55; min-height: 54px; font-family: "Nunito Sans", sans-serif; }
+
+.btn-outline{ font-family: "Nunito Sans", sans-serif; }
+
+/* === Reflections page === */
+.reflections-container { background: linear-gradient(180deg, #f3faf6 0%, #ffffff 65%); padding: 32px 0 48px; font-family: "Nunito Sans", sans-serif; }
+.reflections-card { background: #ffffff; border: 1px solid rgba(15, 63, 41, 0.08); border-radius: 20px; padding: 24px; max-width: 980px; margin: 0 auto; box-shadow: 0 10px 30px rgba(16, 68, 50, 0.06); font-family: "Nunito Sans", sans-serif; }
+.reflections-card .card { background: transparent; border: 0; padding: 0; box-shadow: none; font-family: "Nunito Sans", sans-serif; }
+.reflections-card textarea { font-family: "Nunito Sans", sans-serif; }
+.reflections-card .actions button { font-family: "Nunito Sans", sans-serif; }
+
+.hero-landing.hero-tall { padding: 56px 0 36px; font-family: "Nunito Sans", sans-serif; }
+/* ===== Dark-mode readability overrides (minimal) ===== */
+:root[data-theme="dark"] .brand-name,
+:root[data-theme="dark"] .nav-link,
+:root[data-theme="dark"] .hero-title,
+:root[data-theme="dark"] .section-title,
+:root[data-theme="dark"] .card-title,
+:root[data-theme="dark"] .breath-circle .label,
+:root[data-theme="dark"] .tool-title {
+  color: var(--text) !important;
 }
 
-.section-heading{
-  text-align: center;
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--ink);
-  margin: 10px 0 24px;
-  position: relative;
-}
-.section-heading span{
-  display:inline-block;
-  border-bottom: 3px solid var(--ring);
-  padding: 0 2px 6px;
+:root[data-theme="dark"] .hero-subtitle,
+:root[data-theme="dark"] .card-text,
+:root[data-theme="dark"] .note,
+:root[data-theme="dark"] .tool-copy,
+:root[data-theme="dark"] .brand-text {
+  color: var(--text-muted) !important;
 }
 
-.card-grid{
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 22px;
-}
-@media (max-width: 980px){
-  .card-grid{ grid-template-columns: 1fr; }
-}
-
-.tool-card{
-  background: var(--surface);
-  border: 1px solid var(--ring);
-  border-radius: 14px;
-  padding: 22px;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.03);
-}
-
-.tool-icon{
-  width: 56px; height: 56px; border-radius: 50%;
-  background: #d9efe6;
-  color: #2c7b5d;
-  display:grid; place-items:center;
-  font-size: 26px;
-  margin: 0 auto 12px;
-}
-
-.tool-title{
-  text-align:center;
-  margin: 2px 0 8px;
-  font-size: 18px;
-  color: var(--ink);
-}
-
-.tool-copy{
-  text-align:center;
-  color: var(--ink-muted);
-  font-size: 14px;
-  line-height: 1.55;
-  min-height: 54px;
-}
-
-.btn-outline{
-  display:block;
-  width: 100px;
-  margin: 14px auto 0;
-  text-align: center;
-  padding: 8px 0;
-  border-radius: 8px;
-  text-decoration:none;
-  color: var(--ink);
-  border: 1px solid var(--ring);
-  background: #f9fbfa;
-}
-.btn-outline:hover{
-  border-color: #cfe1d9;
-}
-/* === Reflections page: soft green/white + rounded surfaces === */
-
-.reflections-container {
-  /* Soft background that blends into white */
-  background: linear-gradient(180deg, #f3faf6 0%, #ffffff 65%);
-  padding: 32px 0 48px;
-}
-
-.reflections-card {
-  /* Rounded white card with gentle elevation */
-  background: #ffffff;
-  border: 1px solid rgba(15, 63, 41, 0.08);
-  border-radius: 20px;
-  padding: 24px;
-  max-width: 980px;
-  margin: 0 auto;
-  box-shadow: 0 10px 30px rgba(16, 68, 50, 0.06);
-}
-
-/* If the inner Journal component renders a .card, soften it here */
-.reflections-card .card {
-  background: transparent;
-  border: 0;
-  padding: 0;
-  box-shadow: none;
-}
-
-/* Larger, rounder textarea for writing */
-.reflections-card textarea {
-  display: block;
-  width: 100%;
-  min-height: 220px;                    /* bigger typing area */
-  border-radius: 14px !important;       /* softer corners */
-  border: 1px solid rgba(15, 63, 41, 0.18);
-  padding: 12px 14px;
-  outline: none;
-  background: #ffffff;
-  box-shadow: inset 0 1px 2px rgba(16, 68, 50, 0.04);
-}
-
-.reflections-card textarea:focus {
-  border-color: rgba(20, 83, 45, 0.55);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
-}
-
-/* Softer buttons inside the reflections panel */
-.reflections-card .actions button {
-  border-radius: 10px;
-  padding: 10px 14px;
-}
-
-/* Make the green hero on Reflections a touch taller for balance */
-.hero-landing.hero-tall {
-  padding: 56px 0 36px;
+/* Optional: slightly darker header border in dark mode for separation */
+:root[data-theme="dark"] .site-header {
+  background: #141a18cc;
+  border-bottom-color: var(--border);
 }
