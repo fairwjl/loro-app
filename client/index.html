@@ -1,6 +1,6 @@
 <!-- client/index.html -->
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -152,12 +152,49 @@
         outline-offset: 3px;
       }
       @media print { .crisis-fab { display: none !important; } }
+
+      /* ===== Night Mode toggle (global, small) ===== */
+      .theme-fab {
+        position: fixed;
+        right: 16px;
+        bottom: 72px; /* stacked above Crisis 988 */
+        z-index: 9999;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        box-shadow: var(--panel-shadow);
+        text-decoration: none;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+      }
+      .theme-fab .dot {
+        width: 10px; height: 10px; border-radius: 50%;
+        background: var(--accent);
+        display: inline-block;
+      }
+      .theme-fab:focus-visible {
+        outline: 3px solid var(--focus);
+        outline-offset: 3px;
+      }
+      @media print { .theme-fab { display: none !important; } }
     </style>
   </head>
 
   <body>
     <div id="root"></div>
 
+    <!-- Night Mode toggle (visible on every page) -->
+    <button id="theme-toggle" class="theme-fab" type="button" aria-pressed="false" aria-label="Toggle night mode">
+      <span class="dot" aria-hidden="true"></span>
+      <span id="theme-toggle-label">Night</span>
+    </button>
+
+    <!-- Crisis quick access -->
     <a
       class="crisis-fab"
       href="tel:988"
@@ -169,5 +206,43 @@
     </a>
 
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Minimal script to persist + toggle theme -->
+    <script>
+      (function () {
+        const KEY = "loro_theme"; // "light" | "dark"
+        const root = document.documentElement;
+        const btn = document.getElementById("theme-toggle");
+        const label = document.getElementById("theme-toggle-label");
+
+        // Initialize from localStorage
+        try {
+          const saved = localStorage.getItem(KEY);
+          if (saved === "light" || saved === "dark") {
+            root.setAttribute("data-theme", saved);
+          } else {
+            root.setAttribute("data-theme", "light"); // default
+          }
+        } catch {
+          root.setAttribute("data-theme", "light");
+        }
+
+        // Set initial button state/label
+        function syncLabel() {
+          const dark = root.getAttribute("data-theme") === "dark";
+          btn.setAttribute("aria-pressed", dark ? "true" : "false");
+          label.textContent = dark ? "Day" : "Night";
+        }
+        syncLabel();
+
+        btn.addEventListener("click", () => {
+          const dark = root.getAttribute("data-theme") === "dark";
+          const next = dark ? "light" : "dark";
+          root.setAttribute("data-theme", next);
+          try { localStorage.setItem(KEY, next); } catch {}
+          syncLabel();
+        });
+      })();
+    </script>
   </body>
 </html>
