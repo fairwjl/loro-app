@@ -1,3 +1,4 @@
+<!-- client/index.html -->
 <!doctype html>
 <html lang="en">
   <head>
@@ -7,35 +8,166 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <!-- Inter (variable) – clean, friendly -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
 
-    <!-- Accessibility base styles -->
-    <style id="a11y-base">
+    <!-- ====== Global UI foundation (palette, manual dark hook only) ====== -->
+    <style>
+      /* ------ Color tokens (default LIGHT theme) ------ */
+      :root {
+        /* Base surfaces & text (light, calming) */
+        --bg: #ffffff;
+        --surface: #ffffff;
+        --surface-muted: #f7f7f7;
+        --border: #e5e5e5;
+        --text: #243a2e;
+        --text-muted: #4a5e54;
+
+        /* Accents */
+        --accent: #0a7d6d;
+        --accent-contrast: #ffffff;
+        --accent-muted: #e6f4f1;
+
+        /* Focus ring */
+        --focus: #5ccbbd;
+
+        /* Panels / shadows */
+        --panel-shadow: 0 1px 2px rgba(10, 125, 109, 0.06);
+      }
+
+      /* ===== Manual theme override hooks (set ONLY by pages/components) ===== */
+      :root[data-theme="light"] {
+        --bg: #ffffff;
+        --surface: #ffffff;
+        --surface-muted: #f7f7f7;
+        --border: #e5e5e5;
+        --text: #243a2e;
+        --text-muted: #4a5e54;
+
+        --accent: #0a7d6d;
+        --accent-contrast: #ffffff;
+        --accent-muted: #e6f4f1;
+
+        --focus: #5ccbbd;
+        --panel-shadow: 0 1px 2px rgba(10, 125, 109, 0.06);
+      }
+      :root[data-theme="dark"] {
+        --bg: #0f1412;
+        --surface: #141a18;
+        --surface-muted: #18201d;
+        --border: #23302b;
+        --text: #e7f1ec;
+        --text-muted: #cbdad4;
+
+        --accent: #4bc1b2;
+        --accent-contrast: #04110e;
+        --accent-muted: #10332e;
+
+        --focus: #7ee2d6;
+        --panel-shadow: none;
+      }
+      /* ===== End manual override hooks ===== */
+
+      /* ------ Global base styles ------ */
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+
+      .section-title { color: var(--text); }
+      .card-title { color: var(--text); }
+      .card-text { color: var(--text-muted); }
+
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        box-shadow: var(--panel-shadow);
+      }
+
+      .btn {
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--surface-muted);
+        color: var(--text);
+        padding: 8px 12px;
+        cursor: pointer;
+      }
+      .btn-primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--accent-contrast);
+      }
+
+      button, .btn, input[type="checkbox"], input[type="radio"] {
+        min-height: 40px;
+      }
+
       @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after {
-          animation-duration: 0.001ms !important;
+        * {
+          animation-duration: 0.001s !important;
           animation-iteration-count: 1 !important;
-          transition-duration: 0.001ms !important;
+          transition-duration: 0.001s !important;
           scroll-behavior: auto !important;
         }
       }
 
+      :focus { outline: none; }
       :focus-visible {
-        outline: 2px solid #0a7d6d;
-        outline-offset: 3px;
+        outline: 2px solid var(--focus);
+        outline-offset: 2px;
+        border-radius: 8px;
       }
 
-      button, .btn, a.button, input[type="checkbox"], input[type="radio"] {
-        min-height: 44px;
-        min-width: 44px;
+      /* ====== Crisis button (global) ====== */
+      .crisis-fab {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        z-index: 9999;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        background: var(--accent);
+        color: var(--accent-contrast);
+        border: 1px solid var(--accent);
+        border-radius: 999px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+        text-decoration: none;
+        font-weight: 600;
+        letter-spacing: 0.2px;
       }
+      .crisis-fab:focus-visible {
+        outline: 3px solid var(--focus);
+        outline-offset: 3px;
+      }
+      @media print { .crisis-fab { display: none !important; } }
     </style>
   </head>
+
   <body>
     <div id="root"></div>
+
+    <a
+      class="crisis-fab"
+      href="tel:988"
+      aria-label="Call or text 988 Suicide & Crisis Lifeline in the U.S. If this is an emergency, call 911 or your local emergency number."
+      title="Crisis 988 (U.S.)"
+    >
+      <span aria-hidden="true" style="width:10px;height:10px;border-radius:50%;background:var(--accent-contrast);display:inline-block;"></span>
+      Crisis 988
+    </a>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
