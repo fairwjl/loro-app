@@ -2,11 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 
 /**
  * BreathingPage – trauma-informed, reduced-stimulus paced breathing
- * - Patterns: Box (4-4-4-4), 4-7-8, 6-6, 5-5
- * - Visual: expanding circle; reduced-motion shows a progress bar
- * - Start / Pause / Reset controls
- * - Optional soft tone on phase change (OFF by default)
- * - Respects prefers-reduced-motion; user can override with a toggle
  */
 
 const PATTERNS = [
@@ -16,19 +11,19 @@ const PATTERNS = [
   { key: "55", label: "Gentle (5-5)", phases: ["Inhale", "Exhale"], secs: [5, 5] },
 ];
 
+const THEME_KEY = "loro_theme_breathing"; // scoped key so it doesn't affect the whole app
+
 export default function BreathingPage() {
   const [patternKey, setPatternKey] = useState("66");
-  // JS-safe: provide a default if not found
-  const pattern = useMemo(
-    () => PATTERNS.find((p) => p.key === patternKey) || PATTERNS[0],
-    [patternKey]
-  );
+  const pattern = useMemo(() => PATTERNS.find(p => p.key === patternKey), [patternKey]);
 
   const [isRunning, setIsRunning] = useState(false);
   const [phaseIndex, setPhaseIndex] = useState(0);
-  const [elapsedInPhase, setElapsedInPhase] = useState(0); // seconds (float)
-  const [useReducedMotion, setUseReducedMotion] = useState(false); // user override
-  const [soundOn, setSoundOn] = useState(false); // OFF by default
+  const [elapsedInPhase, setElapsedInPhase] = useState(0);
+  const [useReducedMotion, setUseReducedMotion] = useState(false);
+  const [soundOn, setSoundOn] = useState(false);
+  const [nightMode, setNightMode] = useState(false); // page-scoped only
+
   const rafRef = useRef(null);
   const lastTsRef = useRef(null);
   const audioRef = useRef(null);
@@ -42,23 +37,27 @@ export default function BreathingPage() {
     return () => mq.removeEventListener?.("change", listener);
   }, []);
 
+  // Init page-scoped night mode from localStorage (no touching <html>)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(THEME_KEY);
+      if (saved === "dark") setNightMode(true);
+      if (saved === "light") setNightMode(false);
+    } catch {}
+  }, []);
+
   // WebAudio tone at phase changes (optional)
   function beep() {
     if (!soundOn) return;
     if (!audioRef.current) {
       try {
-        const Ctx = window.AudioContext || window.webkitAudioContext;
-        if (!Ctx) return;
-        audioRef.current = new Ctx();
-      } catch {
-        return; // audio not available; fail silently
-      }
+        audioRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      } catch { return; }
     }
     const ctx = audioRef.current;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = "sine";
-    // Slightly softer tone for "Exhale", brighter for "Inhale"/"Hold"
     const phase = pattern.phases[phaseIndex];
     const freq = phase === "Exhale" ? 392 : 523.25; // G4 vs C5
     osc.frequency.setValueAtTime(freq, ctx.currentTime);
@@ -79,16 +78,14 @@ export default function BreathingPage() {
       lastTsRef.current = null;
       return;
     }
-
     const tick = (ts) => {
       if (lastTsRef.current == null) lastTsRef.current = ts;
-      const dt = (ts - lastTsRef.current) / 1000; // seconds
+      const dt = (ts - lastTsRef.current) / 1000;
       lastTsRef.current = ts;
 
       setElapsedInPhase((prev) => {
         const next = prev + dt;
         if (next >= durationCurrentPhase) {
-          // advance phase
           const nextIndex = (phaseIndex + 1) % pattern.phases.length;
           setPhaseIndex(nextIndex);
           beep();
@@ -99,7 +96,6 @@ export default function BreathingPage() {
 
       rafRef.current = requestAnimationFrame(tick);
     };
-
     rafRef.current = requestAnimationFrame(tick);
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -109,44 +105,59 @@ export default function BreathingPage() {
   }, [isRunning, phaseIndex, patternKey, durationCurrentPhase, soundOn]);
 
   function start() {
-    // reset timers but keep the current pattern
     setPhaseIndex(0);
     setElapsedInPhase(0);
     setIsRunning(true);
     beep();
   }
-
-  function pause() {
-    setIsRunning(false);
-  }
-
-  function reset() {
-    setIsRunning(false);
-    setPhaseIndex(0);
-    setElapsedInPhase(0);
-  }
+  function pause() { setIsRunning(false); }
+  function reset() { setIsRunning(false); setPhaseIndex(0); setElapsedInPhase(0); }
 
   // Visuals
   const phase = pattern.phases[phaseIndex];
   const progress = Math.min(1, elapsedInPhase / durationCurrentPhase);
-  // For the circle: scale from 0.9→1.2 on inhale, 1.2→0.9 on exhale; hold keeps steady.
   const baseScale = 1.0;
   let scale = baseScale;
   if (phase === "Inhale") scale = 0.9 + 0.3 * progress;
   else if (phase === "Exhale") scale = 1.2 - 0.3 * progress;
 
+  // Night mode: override CSS variables only within this page wrapper
+  const darkVars = nightMode
+    ? {
+        /* surfaces & text */
+        "--bg": "#0f1412",
+        "--surface": "#141a18",
+        "--surface-muted": "#18201d",
+        "--border": "#23302b",
+        "--text": "#e7f1ec",
+        "--text-muted": "#cbdad4",
+        /* accents */
+        "--accent": "#4bc1b2",
+        "--accent-contrast": "#04110e",
+        "--accent-muted": "#10332e",
+        "--focus": "#7ee2d6",
+        "--panel-shadow": "none",
+      }
+    : {};
+
+  function toggleNightMode(checked) {
+    setNightMode(checked);
+    try { localStorage.setItem(THEME_KEY, checked ? "dark" : "light"); } catch {}
+  }
+
   return (
     <div
       style={{
         fontFamily: "Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
-        color: "#243a2e",
+        color: "var(--text)",
         maxWidth: 760,
         margin: "0 auto",
         padding: "8px 16px 28px",
+        ...darkVars, // <— page-scoped variable overrides
       }}
     >
-      <h2 className="section-title" style={{ color: "#243a2e" }}>Breathing</h2>
-      <p className="card-text" style={{ color: "#4a5e54" }}>
+      <h2 className="section-title">Breathing</h2>
+      <p className="card-text">
         Paced breathing can help settle the nervous system. Choose a pattern, then press Start.
       </p>
 
@@ -155,26 +166,34 @@ export default function BreathingPage() {
         className="panel"
         style={{
           marginTop: 12,
-          background: "#ffffff",
-          border: "1px solid #d7ece8",
+          background: "var(--surface)",
+          border: "1px solid var(--border)",
           borderRadius: 16,
           padding: 12,
         }}
       >
-        <div className="form-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr auto", gap: 8, alignItems: "center" }}>
-          <label htmlFor="pattern" style={{ color: "#243a2e" }}>Pattern</label>
+        <div
+          className="form-row"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr auto auto",
+            gap: 8,
+            alignItems: "center",
+          }}
+        >
+          <label htmlFor="pattern">Pattern</label>
           <select
             id="pattern"
             value={patternKey}
             onChange={(e) => { setPatternKey(e.target.value); reset(); }}
-            style={{ borderRadius: 10, padding: "8px 10px", border: "1px solid #cfe7e3" }}
+            style={{ borderRadius: 10, padding: "8px 10px", border: "1px solid var(--border)" }}
           >
-            {PATTERNS.map((p) => (
+            {PATTERNS.map(p => (
               <option key={p.key} value={p.key}>{p.label}</option>
             ))}
           </select>
 
-          <label htmlFor="reduced" style={{ justifySelf: "end", color: "#243a2e" }}>Reduced motion</label>
+          <label htmlFor="reduced" style={{ justifySelf: "end" }}>Reduced motion</label>
           <input
             id="reduced"
             type="checkbox"
@@ -184,65 +203,60 @@ export default function BreathingPage() {
           />
         </div>
 
-        <div className="controls-row" style={{ display: "flex", gap: 8, marginTop: 12 }}>
-          {!isRunning ? (
-            <button
-              className="btn btn-primary"
-              onClick={start}
-              style={{
-                padding: "10px 16px",
-                borderRadius: 12,
-                backgroundColor: "#0a7d6d",
-                border: "1px solid #0a7d6d",
-                minWidth: 100,
-              }}
-            >
-              Start
-            </button>
-          ) : (
-            <button
-              className="btn"
-              onClick={pause}
-              style={{
-                padding: "10px 16px",
-                borderRadius: 12,
-                backgroundColor: "#e8f3f1",
-                border: "1px solid #cfe7e3",
-                minWidth: 100,
-              }}
-            >
-              Pause
-            </button>
-          )}
-          <button
-            className="btn"
-            onClick={reset}
-            style={{
-              padding: "10px 16px",
-              borderRadius: 12,
-              backgroundColor: "#f7f7f7",
-              border: "1px solid #e5e5e5",
-              minWidth: 100,
-            }}
-          >
-            Reset
-          </button>
+        {/* Night mode toggle (page-scoped) */}
+        <div
+          className="form-row"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            marginTop: 8,
+            color: "var(--text)",
+          }}
+        >
+          <label htmlFor="nightmode" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <input
+              id="nightmode"
+              type="checkbox"
+              checked={nightMode}
+              onChange={(e) => toggleNightMode(e.target.checked)}
+              aria-label="Toggle night mode (dark theme) for this page"
+              style={{ transform: "scale(0.9)", transformOrigin: "left center" }}
+            />
+            Night mode
+          </label>
 
-          <label style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8, color: "#243a2e" }}>
+          <label style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
             <input
               type="checkbox"
               checked={soundOn}
               onChange={(e) => setSoundOn(e.target.checked)}
               aria-label="Enable soft tone on phase change"
+              style={{ transform: "scale(0.9)", transformOrigin: "left center" }}
             />
             Soft tone
           </label>
         </div>
+
+        <div className="controls-row" style={{ display: "flex", gap: 8, marginTop: 12 }}>
+          {!isRunning ? (
+            <button className="btn btn-primary" onClick={start} style={{ padding: "10px 16px", borderRadius: 12, minWidth: 100 }}>
+              Start
+            </button>
+          ) : (
+            <button className="btn" onClick={pause} style={{ padding: "10px 16px", borderRadius: 12, backgroundColor: "var(--surface-muted)", border: "1px solid var(--border)", minWidth: 100 }}>
+              Pause
+            </button>
+          )}
+          <button className="btn" onClick={reset} style={{ padding: "10px 16px", borderRadius: 12, backgroundColor: "var(--surface-muted)", border: "1px solid var(--border)", minWidth: 100 }}>
+            Reset
+          </button>
+        </div>
       </div>
 
       {/* Visual area */}
-      <div className="panel" style={{ marginTop: 16, padding: 20, border: "1px solid #e6f4f1", borderRadius: 16, background: "#ffffff" }}>
-        <div aria-live="polite" role="status" style={{ marginBottom: 8, color: "#243a2e" }}>
+      <div className="panel" style={{ marginTop: 16, padding: 20, border: "1px solid var(--border)", borderRadius: 16, background: "var(--surface)" }}>
+        <div aria-live="polite" role="status" style={{ marginBottom: 8 }}>
           {pattern.label} – <strong>{phase}</strong> ({Math.ceil(durationCurrentPhase - elapsedInPhase)}s)
         </div>
 
@@ -254,25 +268,25 @@ export default function BreathingPage() {
                 width: 180,
                 height: 180,
                 borderRadius: "50%",
-                border: "8px solid #d7ece8",
-                background: "#f6fbfa",
+                border: "8px solid var(--accent-muted)",
+                background: "var(--accent-muted)",
                 transform: `scale(${scale})`,
                 transition: "transform 0.2s linear",
-                boxShadow: "0 1px 2px rgba(10,125,109,0.06)",
+                boxShadow: "var(--panel-shadow)",
               }}
             />
           </div>
         ) : (
           <div style={{ padding: "8px 0" }}>
-            <div style={{ fontSize: 14, color: "#4a5e54", marginBottom: 6 }}>{phase}</div>
+            <div style={{ fontSize: 14, color: "var(--text-muted)", marginBottom: 6 }}>{phase}</div>
             <div
               aria-hidden="true"
               style={{
                 width: "100%",
                 height: 14,
-                background: "#f0f6f5",
+                background: "var(--surface-muted)",
                 borderRadius: 999,
-                border: "1px solid #d7ece8",
+                border: "1px solid var(--border)",
                 overflow: "hidden",
               }}
             >
@@ -280,7 +294,7 @@ export default function BreathingPage() {
                 style={{
                   height: "100%",
                   width: `${progress * 100}%`,
-                  background: "#0a7d6d",
+                  background: "var(--accent)",
                   transition: "width 0.2s linear",
                 }}
               />
@@ -289,17 +303,17 @@ export default function BreathingPage() {
         )}
       </div>
 
-      {/* Compact, non-clinical reminder */}
+      {/* Compact reminder */}
       <div
         style={{
-          backgroundColor: "#f7f7f7",
-          border: "1px solid #e5e5e5",
+          backgroundColor: "var(--surface-muted)",
+          border: "1px solid var(--border)",
           borderRadius: 8,
           padding: 12,
           marginTop: 20,
           fontSize: 12,
           lineHeight: 1.45,
-          color: "#4a5e54",
+          color: "var(--text-muted)",
         }}
       >
         This exercise supports self-regulation and is not medical advice or therapy. If you’re in crisis, call <strong>911</strong> (U.S.) or dial/text <strong>988</strong>, or use your local emergency number.
