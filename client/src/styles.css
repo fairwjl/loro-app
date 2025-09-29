@@ -174,3 +174,112 @@
   background: #141a18cc;
   border-bottom-color: var(--border);
 }
+/* Journal page: small note under intro */
+.journal-note {
+  font-size: 14px;
+  color: #516e64;
+  margin: -4px 0 16px;
+  line-height: 1.5;
+}
+/* ===== THEME VARIABLE BRIDGE (append-only) =========================
+   Map older hardcoded greens/grays to global CSS variables so both
+   light & dark themes stay readable. No layout changes.
+==================================================================== */
+
+/* Re-alias local tokens to global theme tokens from index.html */
+:root {
+  --ink: var(--text);
+  --ink-muted: var(--text-muted);
+  --surface: var(--surface);
+  --ring: var(--border);
+}
+
+/* Header & nav */
+.brand-mark { color: var(--accent) !important; }
+.brand-name { color: var(--text) !important; }
+
+.nav-link { color: var(--text-muted) !important; }
+.nav-link:hover { background: var(--accent-muted) !important; }
+.nav-link.active {
+  color: var(--accent) !important;
+  background: var(--accent-muted) !important;
+}
+
+/* Cards / panels / headings / copy */
+.card,
+.panel {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+.section-title,
+.card-title { color: var(--text) !important; }
+.card-text,
+.note { color: var(--text-muted) !important; }
+
+/* Buttons */
+.btn {
+  background: var(--surface-muted) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+.btn:hover { background: var(--surface) !important; }
+
+.btn-primary {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: var(--accent-contrast) !important;
+}
+.btn-ghost {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+/* Banners / dividers */
+.banner {
+  /* keep gradient feel; ensure border blends in both themes */
+  border-color: var(--border) !important;
+}
+.bullets, .numbered { color: var(--text) !important; }
+
+/* Forms */
+.form-row label { color: var(--text) !important; }
+input, textarea, select {
+  color: var(--text) !important;
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+input::placeholder,
+textarea::placeholder { color: var(--text-muted) !important; }
+
+/* Breathing visual (simple) */
+.breath-circle {
+  background: var(--surface-muted) !important;
+  border-color: var(--border) !important;
+}
+.breath-circle .dot { background: var(--accent) !important; }
+.breath-circle .label { color: var(--text) !important; }
+
+/* BLS canvas shell */
+.canvas-wrap {
+  background: var(--surface-muted) !important;
+  border-color: var(--border) !important;
+}
+
+/* Links */
+a { color: var(--accent) !important; }
+a:hover { opacity: 0.9; }
+
+/* Ensure readable focus outlines across themes */
+:focus-visible {
+  outline-color: var(--focus) !important;
+}
+/* ==== Fix: nav hover highlight should not hide text (light & dark) ==== */
+.main-nav .nav-link {
+  background: transparent; /* base (no pill until hover) */
+}
+
+.main-nav .nav-link:hover,
+.main-nav .nav-link:focus-visible {
+  background: var(--accent-muted) !important; /* themed, readable in dark */
+  color: var(--text) !important;              /* keep text visible */
+}
