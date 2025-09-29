@@ -13,7 +13,7 @@ const LS_KEY_TITLE = "journal.title.v1";
 const LS_KEY_BODY = "journal.body.v1";
 const LS_KEY_LASTSAVED = "journal.lastsaved.v1";
 const LS_KEY_PROMPTS_ON = "journal.promptsOn.v1";
-const LS_KEY_ENTRIES = "journal.entries.v1"; // NEW: saved snapshots array
+const LS_KEY_ENTRIES = "journal.entries.v1"; // saved snapshots array
 
 // Gentle, non-clinical prompts
 const PROMPTS = [
@@ -34,7 +34,7 @@ export default function JournalPage() {
   const [promptIndex, setPromptIndex] = useState(0);
   const [lastSavedTs, setLastSavedTs] = useState(null);
 
-  // NEW: saved entries
+  // saved entries
   const [entries, setEntries] = useState([]);
 
   // Simple session timer
@@ -164,7 +164,7 @@ export default function JournalPage() {
     setBody("");
   }
 
-  // NEW: Save current draft as a snapshot entry
+  // Save current draft as a snapshot entry
   function saveSnapshot() {
     const trimmed = (title || body).trim();
     if (!trimmed) {
@@ -180,16 +180,16 @@ export default function JournalPage() {
       words: words,
     };
     setEntries((arr) => [entry, ...arr]);
-    // keep draft as-is (do not clear) to avoid surprising the user
+    // keep draft as-is
   }
 
-  // NEW: Delete single entry
+  // Delete single entry
   function deleteEntry(id) {
     if (!confirm("Delete this saved entry? This cannot be undone.")) return;
     setEntries((arr) => arr.filter((e) => e.id !== id));
   }
 
-  // NEW: Delete all entries
+  // Delete all entries
   function deleteAll() {
     if (!entries.length) return;
     if (
@@ -310,7 +310,7 @@ export default function JournalPage() {
         </div>
       </div>
 
-      {/* NEW: Saved entries list */}
+      {/* Saved entries list */}
       <div className="panel" style={{ padding: 16, marginTop: 16 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
           <h3 style={{ margin: 0, color: "#2f4f46", fontSize: 18 }}>Saved entries</h3>
@@ -354,7 +354,6 @@ export default function JournalPage() {
                   {e.body.length > 220 ? e.body.slice(0, 220) + "…" : e.body}
                 </div>
                 <div style={{ marginTop: 8, display: "flex", gap: 8 }}>
-                  {/* Only deletion is requested; not loading back into draft */}
                   <button className="btn btn-ghost" onClick={() => deleteEntry(e.id)}>
                     Delete…
                   </button>
