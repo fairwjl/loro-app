@@ -174,3 +174,10 @@
   background: #141a18cc;
   border-bottom-color: var(--border);
 }
+/* Journal page: small note under intro */
+.journal-note {
+  font-size: 14px;
+  color: #516e64;
+  margin: -4px 0 16px;
+  line-height: 1.5;
+}
