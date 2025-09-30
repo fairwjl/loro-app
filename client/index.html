@@ -136,17 +136,28 @@
         z-index: 9999;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 10px 14px;
+        gap: 10px;
+        padding: 10px 16px;
+        min-width: 120px;             /* prevent label collapse */
+        white-space: nowrap;           /* keep text visible */
         background: var(--accent);
         color: var(--accent-contrast);
         border: 1px solid var(--accent);
         border-radius: 999px;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
         text-decoration: none;
-        font-weight: 600;
+        font-weight: 700;
         letter-spacing: 0.2px;
+        line-height: 1;
       }
+      .crisis-fab .dot {
+        width: 10px; height: 10px; border-radius: 50%;
+        background: var(--accent-contrast);
+        display: inline-block;
+        flex: 0 0 auto;
+      }
+      .crisis-fab .label { color: var(--accent-contrast); font-size: 14px; }
+      .crisis-fab:hover { filter: brightness(1.05); }
       .crisis-fab:focus-visible {
         outline: 3px solid var(--focus);
         outline-offset: 3px;
@@ -200,9 +211,10 @@
       href="tel:988"
       aria-label="Call or text 988 Suicide & Crisis Lifeline in the U.S. If this is an emergency, call 911 or your local emergency number."
       title="Crisis 988 (U.S.)"
+      role="button"
     >
-      <span aria-hidden="true" style="width:10px;height:10px;border-radius:50%;background:var(--accent-contrast);display:inline-block;"></span>
-      Crisis 988
+      <span aria-hidden="true" class="dot"></span>
+      <span class="label">Crisis 988</span>
     </a>
 
     <script type="module" src="/src/main.jsx"></script>
