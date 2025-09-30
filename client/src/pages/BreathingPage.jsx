@@ -37,14 +37,21 @@ export default function BreathingPage() {
     return () => mq.removeEventListener?.("change", listener);
   }, []);
 
-  // Init page-scoped night mode from localStorage (no touching <html>)
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(THEME_KEY);
-      if (saved === "dark") setNightMode(true);
-      if (saved === "light") setNightMode(false);
-    } catch {}
-  }, []);
+  // Init page-scoped night mode: use saved value if present,
+// otherwise fall back to the global app theme (<html data-theme>).
+useEffect(() => {
+  try {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved === "dark") return setNightMode(true);
+    if (saved === "light") return setNightMode(false);
+
+    const globalTheme = document.documentElement.getAttribute("data-theme");
+    setNightMode(globalTheme === "dark");
+  } catch {
+    const globalTheme = document.documentElement.getAttribute("data-theme");
+    setNightMode(globalTheme === "dark");
+  }
+}, []);
 
   // WebAudio tone at phase changes (optional)
   function beep() {
@@ -147,14 +154,15 @@ export default function BreathingPage() {
 
   return (
     <div
-      style={{
-        fontFamily: "Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
-        color: "var(--text)",
-        maxWidth: 760,
-        margin: "0 auto",
-        padding: "8px 16px 28px",
-        ...darkVars, // <— page-scoped variable overrides
-      }}
+  style={{
+    fontFamily: "Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
+    color: "var(--text)",
+    background: "var(--bg)",          // <-- add this line
+    maxWidth: 760,
+    margin: "0 auto",
+    padding: "8px 16px 28px",
+    ...darkVars, // <— page-scoped variable overrides
+  }}
     >
       <h2 className="section-title">Breathing</h2>
       <p className="card-text">
