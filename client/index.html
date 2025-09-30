@@ -138,8 +138,8 @@
         align-items: center;
         gap: 10px;
         padding: 10px 16px;
-        min-width: 120px;             /* prevent label collapse */
-        white-space: nowrap;           /* keep text visible */
+        min-width: 120px;
+        white-space: nowrap;
         background: var(--accent);
         color: var(--accent-contrast);
         border: 1px solid var(--accent);
@@ -156,7 +156,6 @@
         display: inline-block;
         flex: 0 0 auto;
       }
-      .crisis-fab .label { color: var(--accent-contrast); font-size: 14px; }
       .crisis-fab:hover { filter: brightness(1.05); }
       .crisis-fab:focus-visible {
         outline: 3px solid var(--focus);
@@ -193,6 +192,13 @@
         outline-offset: 3px;
       }
       @media print { .theme-fab { display: none !important; } }
+
+      /* ===== Fix: ensure headers are visible in LIGHT theme ===== */
+      :root[data-theme="light"] h1,
+      :root[data-theme="light"] h2,
+      :root[data-theme="light"] .section-title {
+        color: var(--text) !important;
+      }
     </style>
   </head>
 
@@ -207,16 +213,14 @@
 
     <!-- Crisis quick access -->
     <a
-      class="crisis-fab"
-      href="tel:988"
-      aria-label="Call or text 988 Suicide & Crisis Lifeline in the U.S. If this is an emergency, call 911 or your local emergency number."
-      title="Crisis 988 (U.S.)"
-      role="button"
-    >
-      <span aria-hidden="true" class="dot"></span>
-      <span class="label">Crisis 988</span>
-    </a>
-
+  class="crisis-fab"
+  href="tel:988"
+  aria-label="Call or text 988 Suicide & Crisis Lifeline in the U.S. If this is an emergency, call 911 or your local emergency number."
+  title="Crisis 988 (U.S.)"
+>
+  <span class="dot" aria-hidden="true"></span>
+  <span class="label">Call 988 Now</span>
+</a>
     <script type="module" src="/src/main.jsx"></script>
 
     <!-- Minimal script to persist + toggle theme -->
