@@ -136,17 +136,27 @@
         z-index: 9999;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 10px 14px;
+        gap: 10px;
+        padding: 10px 16px;
+        min-width: 120px;
+        white-space: nowrap;
         background: var(--accent);
         color: var(--accent-contrast);
         border: 1px solid var(--accent);
         border-radius: 999px;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
         text-decoration: none;
-        font-weight: 600;
+        font-weight: 700;
         letter-spacing: 0.2px;
+        line-height: 1;
       }
+      .crisis-fab .dot {
+        width: 10px; height: 10px; border-radius: 50%;
+        background: var(--accent-contrast);
+        display: inline-block;
+        flex: 0 0 auto;
+      }
+      .crisis-fab:hover { filter: brightness(1.05); }
       .crisis-fab:focus-visible {
         outline: 3px solid var(--focus);
         outline-offset: 3px;
@@ -182,27 +192,13 @@
         outline-offset: 3px;
       }
       @media print { .theme-fab { display: none !important; } }
-      /* ===== Fix: Ensure headers are visible in light theme ===== */
-:root[data-theme="light"] h1,
-:root[data-theme="light"] h2,
-:root[data-theme="light"] .section-title {
-  color: var(--text) !important;
-}
-/* Force readable Breathing header + intro in LIGHT theme */
-:root[data-theme="light"] .section-title {
-  color: var(--text) !important;
-  opacity: 1 !important;
-}
 
-/* The line of intro copy under the page title */
-:root[data-theme="light"] .page-container > p {
-  color: var(--text-muted) !important;
-  opacity: 1 !important;
-}
-
-/* Keep the Crisis 988 FAB text readable across themes */
-.crisis-fab { color: var(--accent-contrast) !important; 
-}
+      /* ===== Fix: ensure headers are visible in LIGHT theme ===== */
+      :root[data-theme="light"] h1,
+      :root[data-theme="light"] h2,
+      :root[data-theme="light"] .section-title {
+        color: var(--text) !important;
+      }
     </style>
   </head>
 
@@ -217,16 +213,14 @@
 
     <!-- Crisis quick access -->
     <a
-      class="crisis-fab"
-      href="tel:988"
-      aria-label="Call or text 988 Suicide & Crisis Lifeline in the U.S. If this is an emergency, call 911 or your local emergency number."
-      title="Crisis 988 (U.S.)"
-    >
-      <span aria-hidden="true" style="width:10px;height:10px;border-radius:50%;background:var(--accent-contrast);display:inline-block;"></span>
-      <!-- CHANGED TEXT ONLY -->
-      Call 988 Now
-    </a>
-
+  class="crisis-fab"
+  href="tel:988"
+  aria-label="Call or text 988 Suicide & Crisis Lifeline in the U.S. If this is an emergency, call 911 or your local emergency number."
+  title="Crisis 988 (U.S.)"
+>
+  <span class="dot" aria-hidden="true"></span>
+  <span class="label">Call 988 Now</span>
+</a>
     <script type="module" src="/src/main.jsx"></script>
 
     <!-- Minimal script to persist + toggle theme -->
