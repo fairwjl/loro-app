@@ -283,3 +283,27 @@ a:hover { opacity: 0.9; }
   background: var(--accent-muted) !important; /* themed, readable in dark */
   color: var(--text) !important;              /* keep text visible */
 }
+/* ==== Readability fixes (minimal) ===================================== */
+/* Crisis 988 pill: keep text highly visible in both light/dark */
+.crisis-fab {
+  color: #fff !important;            /* ensure white label */
+}
+.crisis-fab > span[aria-hidden="true"] {
+  background: #fff !important;       /* keep the small dot white */
+}
+
+/* Page headings should never fade out in dark mode */
+.section-title {
+  color: var(--text) !important;
+  opacity: 1 !important;
+}
+
+/* Optional: helper/intro text under headings */
+.card-text {
+  color: var(--text-muted) !important;
+}
+/* ---- Fix: Breathing page title appearing faint (overrides any inline opacity) ---- */
+.section-title {
+  opacity: 1 !important;
+  color: var(--text) !important;
+}
