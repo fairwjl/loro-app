@@ -11,6 +11,7 @@ import SafetyPlanPage from "./pages/SafetyPlanPage.jsx";
 import ReflectionsPage from "./pages/ReflectionsPage.jsx";
 import JournalPage from "./pages/JournalPage.jsx";
 import WorksheetsPage from "./pages/WorksheetsPage.jsx";
+import SymptomTrackingPage from "./pages/SymptomTrackingPage.jsx";
 
 function App() {
   return (
@@ -21,9 +22,10 @@ function App() {
           <Route path="/breathing" element={<BreathingPage />} />
           <Route path="/bilateral" element={<BilateralPage />} />
           <Route path="/safety-plan" element={<SafetyPlanPage />} />
-           <Route path="/reflections" element={<ReflectionsPage />} />
-           <Route path="/journal" element={<JournalPage />} />
+          <Route path="/reflections" element={<ReflectionsPage />} />
+          <Route path="/journal" element={<JournalPage />} />
           <Route path="/worksheets" element={<WorksheetsPage />} />
+          <Route path="/symptoms" element={<SymptomTrackingPage />} />
         </Routes>
       </AppShell>
     </Router>
