@@ -1,4 +1,4 @@
-// src/ui/AppShell.jsx
+// client/src/ui/AppShell.jsx
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -10,6 +10,7 @@ const navItems = [
   { to: "/reflections", label: "Reflections" },
   { to: "/journal", label: "Journal" },
   { to: "/worksheets", label: "Worksheets" },
+  { to: "/symptoms", label: "Symptom Tracking" }, // <- exact text
 ];
 
 export default function AppShell({ children }) {
@@ -17,7 +18,6 @@ export default function AppShell({ children }) {
 
   return (
     <div className="app-shell">
-      {/* Top bar / Header */}
       <header className="site-header">
         <div className="header-inner">
           <Link to="/" className="brand">
@@ -28,24 +28,21 @@ export default function AppShell({ children }) {
           <nav className="main-nav" aria-label="Main">
             {navItems.map((item) => {
               const isActive =
-                item.to === "/"
-                  ? pathname === "/"
-                  : pathname.startsWith(item.to);
+                item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
               return (
                 <Link
-                  key={item.to}
-                  to={item.to}
-                  className={`nav-link ${isActive ? "active" : ""}`}
-                >
-                  {item.label}
-                </Link>
+  key={item.to}
+  to={item.to}
+  className={`nav-link ${isActive ? "active" : ""}`}   // <- no comment here
+>
+  {item.label}
+</Link>
               );
             })}
           </nav>
         </div>
       </header>
 
-      {/* Page content */}
       <main className="page-container">{children}</main>
     </div>
   );
