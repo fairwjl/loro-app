@@ -1,4 +1,3 @@
-// client/src/ui/AppShell.jsx
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -10,7 +9,8 @@ const navItems = [
   { to: "/reflections", label: "Reflections" },
   { to: "/journal", label: "Journal" },
   { to: "/worksheets", label: "Worksheets" },
-  { to: "/symptoms", label: "Symptom Tracking" }, // <- exact text
+  { to: "/symptoms", label: "Symptom Tracking" },
+  { to: "/music", label: "Music" }
 ];
 
 export default function AppShell({ children }) {
@@ -31,12 +31,12 @@ export default function AppShell({ children }) {
                 item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
               return (
                 <Link
-  key={item.to}
-  to={item.to}
-  className={`nav-link ${isActive ? "active" : ""}`}   // <- no comment here
->
-  {item.label}
-</Link>
+                  key={item.to}
+                  to={item.to}
+                  className={`nav-link ${isActive ? "active" : ""}`}
+                >
+                  {item.label}
+                </Link>
               );
             })}
           </nav>
