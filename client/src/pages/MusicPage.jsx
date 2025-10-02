@@ -7,12 +7,11 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
  * - Simple audio player list
  * - Loop toggle, and 10-minute session mode (auto-stop at 10:00)
  *
- * To add tracks, place MP3/OGG files in /public/audio and update the TRACKS array below.
- * Example path: client/public/audio/soft-waves.mp3  ->  src: "/audio/soft-waves.mp3"
+ * Files live in /public/audio. We list both MP3 and WAV so browsers can pick what they support.
+ * Example on disk: client/public/audio/soft-waves.mp3  ->  src: "/audio/soft-waves.mp3"
  */
 
-// ▼ Add or rename files in /public/audio, then update these:
-// ▼ List multiple sources per track (order = preference)
+// List multiple sources per track (order = preference)
 const TRACKS = [
   {
     id: "soft-waves",
@@ -32,14 +31,11 @@ const TRACKS = [
 ];
 
 function secondsToMMSS(s) {
-  const mm = Math.floor(s / 60)
-    .toString()
-    .padStart(2, "0");
-  const ss = Math.floor(s % 60)
-    .toString()
-    .padStart(2, "0");
+  const mm = Math.floor(s / 60).toString().padStart(2, "0");
+  const ss = Math.floor(s % 60).toString().padStart(2, "0");
   return `${mm}:${ss}`;
 }
+
 // Pick the first playable source based on browser support
 function pickPlayableSrc(audioEl, srcs) {
   const mimeByExt = (src) => {
@@ -48,13 +44,13 @@ function pickPlayableSrc(audioEl, srcs) {
     if (src.endsWith(".wav")) return "audio/wav";
     return "";
   };
-  for (const src of srcs) {
+  for (const src of srcs || []) {
     const mime = mimeByExt(src);
-    // If we don't know the MIME, try anyway; otherwise ask the browser.
     if (!mime || audioEl.canPlayType(mime)) return src;
   }
   return null;
 }
+
 export default function MusicPage() {
   const [activeId, setActiveId] = useState(null);
   const [isLoop, setIsLoop] = useState(false);
@@ -67,7 +63,7 @@ export default function MusicPage() {
   const sessionStartRef = useRef(null);
 
   const activeTrack = useMemo(
-    () => TRACKS.find(t => t.id === activeId) || null,
+    () => TRACKS.find((t) => t.id === activeId) || null,
     [activeId]
   );
 
@@ -103,42 +99,39 @@ export default function MusicPage() {
   }
 
   function playTrack(track) {
-  setActiveId(track.id);
-  setElapsed(0);
+    setActiveId(track.id);
+    setElapsed(0);
 
-  // Create or reuse audio element
-  if (!audioRef.current) {
-    audioRef.current = new Audio();
-    audioRef.current.addEventListener("ended", () => {
-      // Loop is handled by HTMLAudioElement.loop; session clock stops at 10:00 if enabled.
-    });
-    audioRef.current.addEventListener("error", () => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+      audioRef.current.addEventListener("ended", () => {
+        // Loop is handled by HTMLAudioElement.loop; session clock stops at 10:00 if enabled.
+      });
+      audioRef.current.addEventListener("error", () => {
+        setUnavailable((prev) => ({ ...prev, [track.id]: true }));
+        stopPlayback();
+      });
+    }
+
+    const a = audioRef.current;
+    const src = pickPlayableSrc(a, track.srcs);
+    if (!src) {
       setUnavailable((prev) => ({ ...prev, [track.id]: true }));
       stopPlayback();
-    });
+      return;
+    }
+
+    a.src = src;
+    a.loop = isLoop;
+    a.load();
+
+    a.play()
+      .then(() => startSessionClock())
+      .catch(() => {
+        setUnavailable((prev) => ({ ...prev, [track.id]: true }));
+        stopPlayback();
+      });
   }
-
-  const a = audioRef.current;
-  const src = pickPlayableSrc(a, track.srcs || []);
-  if (!src) {
-    setUnavailable((prev) => ({ ...prev, [track.id]: true }));
-    stopPlayback();
-    return;
-  }
-
-  a.src = src;
-  a.loop = isLoop;
-  a.load();
-
-  a.play()
-    .then(() => {
-      startSessionClock();
-    })
-    .catch(() => {
-      setUnavailable((prev) => ({ ...prev, [track.id]: true }));
-      stopPlayback();
-    });
-}
 
   function togglePlayPause() {
     const a = audioRef.current;
@@ -206,7 +199,6 @@ export default function MusicPage() {
           {TRACKS.map((t) => {
             const isActive = activeId === t.id;
             const disabled = !!unavailable[t.id];
-
             return (
               <div
                 key={t.id}
@@ -224,10 +216,10 @@ export default function MusicPage() {
                     {t.title}
                   </div>
                   {disabled && (
-  <div className="note">
-    Upload pending or unavailable. ({(t.srcs || []).join(" or ")})
-  </div>
-)}
+                    <div className="note">
+                      Upload pending or unavailable. {(t.srcs || []).join(" or ")}
+                    </div>
+                  )}
                 </div>
 
                 {!isActive ? (
