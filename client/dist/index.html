@@ -1,20 +1,287 @@
-<!-- client/src/index.html -->
+<!-- client/index.html -->
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Loro</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
     <!-- Inter (variable) – clean, friendly -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="/assets/index-NPhEcAKy.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CAaRPZhh.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+
+    <!-- ====== Global UI foundation (palette, manual dark hook only) ====== -->
+    <style>
+      /* ------ Color tokens (default LIGHT theme) ------ */
+      :root {
+        /* Base surfaces & text (light, calming) */
+        --bg: #ffffff;
+        --surface: #ffffff;
+        --surface-muted: #f7f7f7;
+        --border: #e5e5e5;
+        --text: #243a2e;
+        --text-muted: #4a5e54;
+
+        /* Accents */
+        --accent: #0a7d6d;
+        --accent-contrast: #ffffff;
+        --accent-muted: #e6f4f1;
+
+        /* Focus ring */
+        --focus: #5ccbbd;
+
+        /* Panels / shadows */
+        --panel-shadow: 0 1px 2px rgba(10, 125, 109, 0.06);
+      }
+
+      /* ===== Manual theme override hooks (set ONLY by pages/components) ===== */
+      :root[data-theme="light"] {
+        --bg: #ffffff;
+        --surface: #ffffff;
+        --surface-muted: #f7f7f7;
+        --border: #e5e5e5;
+        --text: #243a2e;
+        --text-muted: #4a5e54;
+
+        --accent: #0a7d6d;
+        --accent-contrast: #ffffff;
+        --accent-muted: #e6f4f1;
+
+        --focus: #5ccbbd;
+        --panel-shadow: 0 1px 2px rgba(10, 125, 109, 0.06);
+      }
+      :root[data-theme="dark"] {
+        --bg: #0f1412;
+        --surface: #141a18;
+        --surface-muted: #18201d;
+        --border: #23302b;
+        --text: #e7f1ec;
+        --text-muted: #cbdad4;
+
+        --accent: #4bc1b2;
+        --accent-contrast: #04110e;
+        --accent-muted: #10332e;
+
+        --focus: #7ee2d6;
+        --panel-shadow: none;
+      }
+      /* ===== End manual override hooks ===== */
+
+      /* ------ Global base styles ------ */
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+
+      .section-title { color: var(--text); }
+      .card-title { color: var(--text); }
+      .card-text { color: var(--text-muted); }
+
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        box-shadow: var(--panel-shadow);
+      }
+
+      .btn {
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--surface-muted);
+        color: var(--text);
+        padding: 8px 12px;
+        cursor: pointer;
+      }
+      .btn-primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--accent-contrast);
+      }
+
+      button, .btn, input[type="checkbox"], input[type="radio"] {
+        min-height: 40px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.001s !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001s !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      :focus { outline: none; }
+      :focus-visible {
+        outline: 2px solid var(--focus);
+        outline-offset: 2px;
+        border-radius: 8px;
+      }
+
+      /* ====== Crisis button (global) ====== */
+      .crisis-fab {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        z-index: 9999;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 16px;
+        min-width: 120px;
+        white-space: nowrap;
+        background: var(--accent);
+        color: var(--accent-contrast);
+        border: 1px solid var(--accent);
+        border-radius: 999px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+        text-decoration: none;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        line-height: 1;
+      }
+      .crisis-fab .dot {
+        width: 10px; height: 10px; border-radius: 50%;
+        background: var(--accent-contrast);
+        display: inline-block;
+        flex: 0 0 auto;
+      }
+      .crisis-fab:hover { filter: brightness(1.05); }
+      .crisis-fab:focus-visible {
+        outline: 3px solid var(--focus);
+        outline-offset: 3px;
+      }
+      @media print { .crisis-fab { display: none !important; } }
+
+      /* ===== Night Mode toggle (global, small) ===== */
+      .theme-fab {
+        position: fixed;
+        right: 16px;
+        bottom: 72px; /* stacked above Crisis 988 */
+        z-index: 9999;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        box-shadow: var(--panel-shadow);
+        text-decoration: none;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+      }
+      .theme-fab .dot {
+        width: 10px; height: 10px; border-radius: 50%;
+        background: var(--accent);
+        display: inline-block;
+      }
+      .theme-fab:focus-visible {
+        outline: 3px solid var(--focus);
+        outline-offset: 3px;
+      }
+      @media print { .theme-fab { display: none !important; } }
+
+      /* ===== Fix: ensure headers are visible in LIGHT theme ===== */
+      :root[data-theme="light"] h1,
+      :root[data-theme="light"] h2,
+      :root[data-theme="light"] .section-title {
+        color: var(--text) !important;
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-CmJuswkd.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BLxoszLL.css">
   </head>
+
   <body>
     <div id="root"></div>
+
+    <!-- Night Mode toggle (visible on every page) -->
+    <button id="theme-toggle" class="theme-fab" type="button" aria-pressed="false" aria-label="Toggle night mode">
+      <span class="dot" aria-hidden="true"></span>
+      <span id="theme-toggle-label">Night</span>
+    </button>
+
+    <!-- Crisis quick access -->
+    <a
+  class="crisis-fab"
+  href="tel:988"
+  aria-label="Call or text 988 Suicide & Crisis Lifeline in the U.S. If this is an emergency, call 911 or your local emergency number."
+  title="Crisis 988 (U.S.)"
+>
+  <span class="dot" aria-hidden="true"></span>
+  <span class="label">Call 988 Now</span>
+</a>
+    <!-- Non-emergency disclosure -->
+    <div
+      style="
+        position: fixed;
+        right: 16px;
+        bottom: 64px;
+        max-width: 280px;
+        background: var(--surface);
+        color: var(--text-muted);
+        font-size: 12px;
+        line-height: 1.4;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px 10px;
+        box-shadow: var(--panel-shadow);
+        z-index: 9998;
+      "
+    >
+      Loro is a wellness tool, not therapy or medical care.  
+      If you are in crisis, call or text <strong>988</strong> in the U.S.,  
+      or dial <strong>911</strong> (or your local emergency number).
+    </div>
+
+    <!-- Minimal script to persist + toggle theme -->
+    <script>
+      (function () {
+        const KEY = "loro_theme"; // "light" | "dark"
+        const root = document.documentElement;
+        const btn = document.getElementById("theme-toggle");
+        const label = document.getElementById("theme-toggle-label");
+
+        // Initialize from localStorage
+        try {
+          const saved = localStorage.getItem(KEY);
+          if (saved === "light" || saved === "dark") {
+            root.setAttribute("data-theme", saved);
+          } else {
+            root.setAttribute("data-theme", "light"); // default
+          }
+        } catch {
+          root.setAttribute("data-theme", "light");
+        }
+
+        // Set initial button state/label
+        function syncLabel() {
+          const dark = root.getAttribute("data-theme") === "dark";
+          btn.setAttribute("aria-pressed", dark ? "true" : "false");
+          label.textContent = dark ? "Day" : "Night";
+        }
+        syncLabel();
+
+        btn.addEventListener("click", () => {
+          const dark = root.getAttribute("data-theme") === "dark";
+          const next = dark ? "light" : "dark";
+          root.setAttribute("data-theme", next);
+          try { localStorage.setItem(KEY, next); } catch {}
+          syncLabel();
+        });
+      })();
+    </script>
   </body>
 </html>
