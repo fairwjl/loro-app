@@ -3,7 +3,6 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AppShell from "./ui/AppShell";
 
-// NOTE: all imports use "./pages/..." (lowercase)
 import Home from "./pages/Home.jsx";
 import BreathingPage from "./pages/BreathingPage.jsx";
 import BilateralPage from "./pages/BilateralPage.jsx";
@@ -12,6 +11,7 @@ import ReflectionsPage from "./pages/ReflectionsPage.jsx";
 import JournalPage from "./pages/JournalPage.jsx";
 import WorksheetsPage from "./pages/WorksheetsPage.jsx";
 import SymptomTrackingPage from "./pages/SymptomTrackingPage.jsx";
+import MusicPage from "./pages/MusicPage.jsx";
 
 function App() {
   return (
@@ -26,6 +26,7 @@ function App() {
           <Route path="/journal" element={<JournalPage />} />
           <Route path="/worksheets" element={<WorksheetsPage />} />
           <Route path="/symptoms" element={<SymptomTrackingPage />} />
+          <Route path="/music" element={<MusicPage />} />
         </Routes>
       </AppShell>
     </Router>
