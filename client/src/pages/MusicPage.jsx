@@ -15,6 +15,14 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 // Each track lists both MP3 and WAV (browser will pick the first it can play)
 const TRACKS = [
   {
+    id: "asmr-stone-beach",
+    title: "ASMR Stone Beach Waves — Joseph Beg",
+    srcs: [
+      "/audio/ES_ASMR%20Stone%20Beach%20Waves%20-%20Joseph%20Beg%20%28Version%208a7e01fe%29%20-%20fullmix_high_quality.mp3"
+    ],
+    credit: "Joseph Beg — ASMR Stone Beach Waves (licensed per provider terms you selected)"
+  },
+  {
     id: "ever-so-blue",
     title: "Calme — Ever So Blue",
     srcs: ["/audio/ES_Calme - Ever So Blue.mp3", "/audio/ES_Calme - Ever So Blue.wav"],
@@ -43,20 +51,8 @@ const TRACKS = [
     title: "Walk in the Forest — Center of Attention",
     srcs: ["/audio/ES_Walk in the Forest - Center of Attention.mp3", "/audio/ES_Walk in the Forest - Center of Attention.wav"],
     credit: "Center of Attention — Walk in the Forest (licensed per provider terms you selected)"
-  },
-  {
-    id: "asmr-stone-beach",
-    title: "ASMR Stone Beach Waves — Joseph Beg",
-    srcs: ["/audio/ES_ASMR%20Stone%20Beach%20Waves%20-%20Joseph%20Beg%20%28Version%208a7e01fe%29%20-%20fullmix_high_quality.mp3"],
-    credit: "Joseph Beg — ASMR Stone Beach Waves (licensed per provider terms you selected)"
   }
 ];
-
-function secondsToMMSS(s) {
-  const mm = Math.floor(s / 60).toString().padStart(2, "0");
-  const ss = Math.floor(s % 60).toString().padStart(2, "0");
-  return `${mm}:${ss}`;
-}
 
 // Pick the first playable source based on browser support
 function pickPlayableSrc(audioEl, srcs) {
