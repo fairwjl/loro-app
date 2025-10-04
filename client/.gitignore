@@ -4,3 +4,4 @@
 .env.*
 .vercel
 client/dist/
+client/dist/
