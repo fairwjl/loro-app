@@ -11,23 +11,45 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
  * Example on disk: client/public/audio/soft-waves.mp3  ->  src: "/audio/soft-waves.mp3"
  */
 
-// List multiple sources per track (order = preference)
+// ▼ Add or rename files in /public/audio, then update these:
+// Each track lists both MP3 and WAV (browser will pick the first it can play)
 const TRACKS = [
   {
-    id: "soft-waves",
-    title: "Soft Waves (calming)",
-    srcs: ["/audio/soft-waves.mp3", "/audio/soft-waves.wav"],
+    id: "ever-so-blue",
+    title: "Calme — Ever So Blue",
+    srcs: ["/audio/ES_Calme - Ever So Blue.mp3", "/audio/ES_Calme - Ever So Blue.wav"],
+    credit: "Calme — Ever So Blue (licensed per provider terms you selected)"
   },
   {
-    id: "slow-binaural",
-    title: "Slow Binaural (gentle bilateral feel)",
-    srcs: ["/audio/slow-binaural.mp3", "/audio/slow-binaural.wav"],
+    id: "calming-crystals",
+    title: "Calming Crystals — Rocket Noise",
+    srcs: ["/audio/ES_Calming Crystals - Rocket Noise.mp3", "/audio/ES_Calming Crystals - Rocket Noise.wav"],
+    credit: "Calming Crystals — Rocket Noise (licensed per provider terms you selected)"
   },
   {
-    id: "warm-drone",
-    title: "Warm Drone (steady)",
-    srcs: ["/audio/warm-drone.mp3", "/audio/warm-drone.wav"],
+    id: "calming-horizons",
+    title: "Calming Horizons — Staffan Carlen",
+    srcs: ["/audio/ES_Calming Horizons - Staffan Carlen.mp3", "/audio/ES_Calming Horizons - Staffan Carlen.wav"],
+    credit: "Staffan Carlen — Calming Horizons (licensed per provider terms you selected)"
   },
+  {
+    id: "raga-stillness",
+    title: "Raga for Stillness — Aks & Lakshmi",
+    srcs: ["/audio/ES_Raga for Stillness - Aks & Lakshmi.mp3", "/audio/ES_Raga for Stillness - Aks & Lakshmi.wav"],
+    credit: "Aks & Lakshmi — Raga for Stillness (licensed per provider terms you selected)"
+  },
+  {
+    id: "walk-in-forest",
+    title: "Walk in the Forest — Center of Attention",
+    srcs: ["/audio/ES_Walk in the Forest - Center of Attention.mp3", "/audio/ES_Walk in the Forest - Center of Attention.wav"],
+    credit: "Center of Attention — Walk in the Forest (licensed per provider terms you selected)"
+  },
+  {
+    id: "asmr-stone-beach",
+    title: "ASMR Stone Beach Waves — Joseph Beg",
+    srcs: ["/audio/ES_ASMR%20Stone%20Beach%20Waves%20-%20Joseph%20Beg%20%28Version%208a7e01fe%29%20-%20fullmix_high_quality.mp3"],
+    credit: "Joseph Beg — ASMR Stone Beach Waves (licensed per provider terms you selected)"
+  }
 ];
 
 function secondsToMMSS(s) {
@@ -121,7 +143,7 @@ export default function MusicPage() {
       return;
     }
 
-    a.src = src;
+     a.src = encodeURI(src);
     a.loop = isLoop;
     a.load();
 
