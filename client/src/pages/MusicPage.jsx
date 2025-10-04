@@ -11,7 +11,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
  * Example on disk: client/public/audio/soft-waves.mp3  ->  src: "/audio/soft-waves.mp3"
  */
 
-// List multiple sources per track (order = preference)
+// Each track lists MP3/WAV (browser picks the first it can play)
 const TRACKS = [
   {
     id: "stone-beach-waves",
@@ -46,7 +46,7 @@ const TRACKS = [
     ],
   },
   {
-    id: "raga-for-stillness",
+    id: "raga-stillness",
     title: "Raga for Stillness — Aks & Lakshmi",
     srcs: [
       "/audio/ES_Raga for Stillness - Aks & Lakshmi.mp3",
@@ -54,7 +54,7 @@ const TRACKS = [
     ],
   },
   {
-    id: "walk-in-the-forest",
+    id: "walk-in-forest",
     title: "Walk in the Forest — Center of Attention",
     srcs: [
       "/audio/ES_Walk in the Forest - Center of Attention.mp3",
@@ -63,6 +63,7 @@ const TRACKS = [
   },
 ];
 
+// helpers
 function secondsToMMSS(s) {
   const mm = Math.floor(s / 60).toString().padStart(2, "0");
   const ss = Math.floor(s % 60).toString().padStart(2, "0");
@@ -89,7 +90,7 @@ export default function MusicPage() {
   const [isLoop, setIsLoop] = useState(false);
   const [useTenMinutes, setUseTenMinutes] = useState(true);
   const [elapsed, setElapsed] = useState(0); // session clock
-  const [unavailable, setUnavailable] = useState({}); // {id: true} for files that 404, etc.
+  const [unavailable, setUnavailable] = useState({}); // {id: true}
 
   const audioRef = useRef(null);
   const rafRef = useRef(null);
@@ -115,7 +116,6 @@ export default function MusicPage() {
       const delta = (ts - started) / 1000;
       setElapsed(delta);
       if (useTenMinutes && delta >= 600) {
-        // stop at 10:00
         stopPlayback();
         return;
       }
@@ -137,9 +137,7 @@ export default function MusicPage() {
 
     if (!audioRef.current) {
       audioRef.current = new Audio();
-      audioRef.current.addEventListener("ended", () => {
-        // Loop is handled by HTMLAudioElement.loop; session clock stops at 10:00 if enabled.
-      });
+      audioRef.current.addEventListener("ended", () => {});
       audioRef.current.addEventListener("error", () => {
         setUnavailable((prev) => ({ ...prev, [track.id]: true }));
         stopPlayback();
