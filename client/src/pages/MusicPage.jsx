@@ -14,19 +14,52 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 // List multiple sources per track (order = preference)
 const TRACKS = [
   {
-    id: "soft-waves",
-    title: "Soft Waves (calming)",
-    srcs: ["/audio/soft-waves.mp3", "/audio/soft-waves.wav"],
+    id: "stone-beach-waves",
+    title: "Stone Beach Waves (ocean)",
+    // mp3 only (as provided)
+    srcs: [
+      "/audio/ES_ASMR%20Stone%20Beach%20Waves%20-%20Joseph%20Beg%20%28Version%208a7e01fe%29%20-%20fullmix_high_quality.mp3",
+    ],
   },
   {
-    id: "slow-binaural",
-    title: "Slow Binaural (gentle bilateral feel)",
-    srcs: ["/audio/slow-binaural.mp3", "/audio/slow-binaural.wav"],
+    id: "ever-so-blue",
+    title: "Calme — Ever So Blue",
+    srcs: [
+      "/audio/ES_Calme - Ever So Blue.mp3",
+      "/audio/ES_Calme - Ever So Blue.wav",
+    ],
   },
   {
-    id: "warm-drone",
-    title: "Warm Drone (steady)",
-    srcs: ["/audio/warm-drone.mp3", "/audio/warm-drone.wav"],
+    id: "calming-crystals",
+    title: "Calming Crystals — Rocket Noise",
+    srcs: [
+      "/audio/ES_Calming Crystals - Rocket Noise.mp3",
+      "/audio/ES_Calming Crystals - Rocket Noise.wav",
+    ],
+  },
+  {
+    id: "calming-horizons",
+    title: "Calming Horizons — Staffan Carlen",
+    srcs: [
+      "/audio/ES_Calming Horizons - Staffan Carlen.mp3",
+      "/audio/ES_Calming Horizons - Staffan Carlen.wav",
+    ],
+  },
+  {
+    id: "raga-for-stillness",
+    title: "Raga for Stillness — Aks & Lakshmi",
+    srcs: [
+      "/audio/ES_Raga for Stillness - Aks & Lakshmi.mp3",
+      "/audio/ES_Raga for Stillness - Aks & Lakshmi.wav",
+    ],
+  },
+  {
+    id: "walk-in-the-forest",
+    title: "Walk in the Forest — Center of Attention",
+    srcs: [
+      "/audio/ES_Walk in the Forest - Center of Attention.mp3",
+      "/audio/ES_Walk in the Forest - Center of Attention.wav",
+    ],
   },
 ];
 
@@ -121,7 +154,7 @@ export default function MusicPage() {
       return;
     }
 
-    a.src = src;
+    a.src = encodeURI(src);
     a.loop = isLoop;
     a.load();
 
