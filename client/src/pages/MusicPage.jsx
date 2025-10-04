@@ -11,47 +11,59 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
  * Example on disk: client/public/audio/soft-waves.mp3  ->  src: "/audio/soft-waves.mp3"
  */
 
-// ▼ Add or rename files in /public/audio, then update these:
-// Each track lists both MP3 and WAV (browser will pick the first it can play)
+// Each track lists MP3/WAV (browser picks the first it can play)
 const TRACKS = [
+  {
+    id: "stone-beach-waves",
+    title: "Stone Beach Waves (ocean)",
+    // mp3 only (as provided)
+    srcs: [
+      "/audio/ES_ASMR%20Stone%20Beach%20Waves%20-%20Joseph%20Beg%20%28Version%208a7e01fe%29%20-%20fullmix_high_quality.mp3",
+    ],
+  },
   {
     id: "ever-so-blue",
     title: "Calme — Ever So Blue",
-    srcs: ["/audio/ES_Calme - Ever So Blue.mp3", "/audio/ES_Calme - Ever So Blue.wav"],
-    credit: "Calme — Ever So Blue (licensed per provider terms you selected)"
+    srcs: [
+      "/audio/ES_Calme - Ever So Blue.mp3",
+      "/audio/ES_Calme - Ever So Blue.wav",
+    ],
   },
   {
     id: "calming-crystals",
     title: "Calming Crystals — Rocket Noise",
-    srcs: ["/audio/ES_Calming Crystals - Rocket Noise.mp3", "/audio/ES_Calming Crystals - Rocket Noise.wav"],
-    credit: "Calming Crystals — Rocket Noise (licensed per provider terms you selected)"
+    srcs: [
+      "/audio/ES_Calming Crystals - Rocket Noise.mp3",
+      "/audio/ES_Calming Crystals - Rocket Noise.wav",
+    ],
   },
   {
     id: "calming-horizons",
     title: "Calming Horizons — Staffan Carlen",
-    srcs: ["/audio/ES_Calming Horizons - Staffan Carlen.mp3", "/audio/ES_Calming Horizons - Staffan Carlen.wav"],
-    credit: "Staffan Carlen — Calming Horizons (licensed per provider terms you selected)"
+    srcs: [
+      "/audio/ES_Calming Horizons - Staffan Carlen.mp3",
+      "/audio/ES_Calming Horizons - Staffan Carlen.wav",
+    ],
   },
   {
     id: "raga-stillness",
     title: "Raga for Stillness — Aks & Lakshmi",
-    srcs: ["/audio/ES_Raga for Stillness - Aks & Lakshmi.mp3", "/audio/ES_Raga for Stillness - Aks & Lakshmi.wav"],
-    credit: "Aks & Lakshmi — Raga for Stillness (licensed per provider terms you selected)"
+    srcs: [
+      "/audio/ES_Raga for Stillness - Aks & Lakshmi.mp3",
+      "/audio/ES_Raga for Stillness - Aks & Lakshmi.wav",
+    ],
   },
   {
     id: "walk-in-forest",
     title: "Walk in the Forest — Center of Attention",
-    srcs: ["/audio/ES_Walk in the Forest - Center of Attention.mp3", "/audio/ES_Walk in the Forest - Center of Attention.wav"],
-    credit: "Center of Attention — Walk in the Forest (licensed per provider terms you selected)"
+    srcs: [
+      "/audio/ES_Walk in the Forest - Center of Attention.mp3",
+      "/audio/ES_Walk in the Forest - Center of Attention.wav",
+    ],
   },
-  {
-    id: "asmr-stone-beach",
-    title: "ASMR Stone Beach Waves — Joseph Beg",
-    srcs: ["/audio/ES_ASMR%20Stone%20Beach%20Waves%20-%20Joseph%20Beg%20%28Version%208a7e01fe%29%20-%20fullmix_high_quality.mp3"],
-    credit: "Joseph Beg — ASMR Stone Beach Waves (licensed per provider terms you selected)"
-  }
 ];
 
+// helpers
 function secondsToMMSS(s) {
   const mm = Math.floor(s / 60).toString().padStart(2, "0");
   const ss = Math.floor(s % 60).toString().padStart(2, "0");
@@ -78,7 +90,7 @@ export default function MusicPage() {
   const [isLoop, setIsLoop] = useState(false);
   const [useTenMinutes, setUseTenMinutes] = useState(true);
   const [elapsed, setElapsed] = useState(0); // session clock
-  const [unavailable, setUnavailable] = useState({}); // {id: true} for files that 404, etc.
+  const [unavailable, setUnavailable] = useState({}); // {id: true}
 
   const audioRef = useRef(null);
   const rafRef = useRef(null);
@@ -104,7 +116,6 @@ export default function MusicPage() {
       const delta = (ts - started) / 1000;
       setElapsed(delta);
       if (useTenMinutes && delta >= 600) {
-        // stop at 10:00
         stopPlayback();
         return;
       }
@@ -126,9 +137,7 @@ export default function MusicPage() {
 
     if (!audioRef.current) {
       audioRef.current = new Audio();
-      audioRef.current.addEventListener("ended", () => {
-        // Loop is handled by HTMLAudioElement.loop; session clock stops at 10:00 if enabled.
-      });
+      audioRef.current.addEventListener("ended", () => {});
       audioRef.current.addEventListener("error", () => {
         setUnavailable((prev) => ({ ...prev, [track.id]: true }));
         stopPlayback();
@@ -143,7 +152,7 @@ export default function MusicPage() {
       return;
     }
 
-     a.src = encodeURI(src);
+    a.src = encodeURI(src);
     a.loop = isLoop;
     a.load();
 
