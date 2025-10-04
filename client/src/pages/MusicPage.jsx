@@ -5,48 +5,90 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
  * MusicPage
  * - Trauma-informed copy (no clinical claims)
  * - Simple audio player list
- * - Loop toggle, and 10-minute session mode (auto-stop at 10:00)
+ * - Loop toggle + 10-minute session timer (your current behavior)
  *
- * Files live in /public/audio. We list both MP3 and WAV so browsers can pick what they support.
- * Example on disk: client/public/audio/soft-waves.mp3  ->  src: "/audio/soft-waves.mp3"
+ * NOTE: Only include tracks that actually exist in /public/audio and are appropriate.
+ * You can add more items to TRACKS later once they’re verified.
  */
 
-// List multiple sources per track (order = preference)
+// List the tracks we know exist in /public/audio right now
+// Each track can list multiple sources; the player will pick what the browser can play.
+// ▼ EXACT files you copied into /public/audio (kept as-is)
 const TRACKS = [
   {
-    id: "soft-waves",
-    title: "Soft Waves (calming)",
-    srcs: ["/audio/soft-waves.mp3", "/audio/soft-waves.wav"],
+    id: "stone-waves",
+    title: "ASMR Stone Beach Waves — Joseph Beg",
+    // already percent-encoded in the filename on disk
+    srcs: [
+      "/audio/ES_ASMR%20Stone%20Beach%20Waves%20-%20Joseph%20Beg%20%28Version%208a7e01fe%29%20-%20fullmix_high_quality.mp3"
+    ],
   },
   {
-    id: "slow-binaural",
-    title: "Slow Binaural (gentle bilateral feel)",
-    srcs: ["/audio/slow-binaural.mp3", "/audio/slow-binaural.wav"],
+    id: "ever-so-blue",
+    title: "Calme — Ever So Blue",
+    srcs: [
+      "/audio/ES_Calme - Ever So Blue.mp3",
+      "/audio/ES_Calme - Ever So Blue.wav",
+    ],
   },
   {
-    id: "warm-drone",
-    title: "Warm Drone (steady)",
-    srcs: ["/audio/warm-drone.mp3", "/audio/warm-drone.wav"],
+    id: "calming-crystals",
+    title: "Calming Crystals — Rocket Noise",
+    srcs: [
+      "/audio/ES_Calming Crystals - Rocket Noise.mp3",
+      "/audio/ES_Calming Crystals - Rocket Noise.wav",
+    ],
+  },
+  {
+    id: "calming-horizons",
+    title: "Calming Horizons — Staffan Carlen",
+    srcs: [
+      "/audio/ES_Calming Horizons - Staffan Carlen.mp3",
+      "/audio/ES_Calming Horizons - Staffan Carlen.wav",
+    ],
+  },
+  {
+    id: "raga-stillness",
+    title: "Raga for Stillness — Aks & Lakshmi",
+    srcs: [
+      "/audio/ES_Raga for Stillness - Aks & Lakshmi.mp3",
+      "/audio/ES_Raga for Stillness - Aks & Lakshmi.wav",
+    ],
+  },
+  {
+    id: "walk-forest",
+    title: "Walk in the Forest — Center of Attention",
+    srcs: [
+      "/audio/ES_Walk in the Forest - Center of Attention.mp3",
+      "/audio/ES_Walk in the Forest - Center of Attention.wav",
+    ],
   },
 ];
 
+// --- helpers ---
 function secondsToMMSS(s) {
-  const mm = Math.floor(s / 60).toString().padStart(2, "0");
-  const ss = Math.floor(s % 60).toString().padStart(2, "0");
+  const mm = Math.floor(s / 60)
+    .toString()
+    .padStart(2, "0");
+  const ss = Math.floor(s % 60)
+    .toString()
+    .padStart(2, "0");
   return `${mm}:${ss}`;
 }
 
-// Pick the first playable source based on browser support
+// Pick the first playable source and ensure it’s URL-safe (spaces, UTF-8, etc.)
 function pickPlayableSrc(audioEl, srcs) {
   const mimeByExt = (src) => {
-    if (src.endsWith(".mp3")) return "audio/mpeg";
-    if (src.endsWith(".ogg")) return "audio/ogg";
-    if (src.endsWith(".wav")) return "audio/wav";
+    if (src.toLowerCase().endsWith(".mp3")) return "audio/mpeg";
+    if (src.toLowerCase().endsWith(".ogg")) return "audio/ogg";
+    if (src.toLowerCase().endsWith(".wav")) return "audio/wav";
     return "";
   };
-  for (const src of srcs || []) {
-    const mime = mimeByExt(src);
-    if (!mime || audioEl.canPlayType(mime)) return src;
+  for (const raw of srcs) {
+    // encodeURI keeps existing % sequences (so filenames that already contain %28/%29 remain valid)
+    const encoded = encodeURI(raw);
+    const mime = mimeByExt(encoded);
+    if (!mime || audioEl.canPlayType(mime)) return encoded;
   }
   return null;
 }
@@ -55,8 +97,8 @@ export default function MusicPage() {
   const [activeId, setActiveId] = useState(null);
   const [isLoop, setIsLoop] = useState(false);
   const [useTenMinutes, setUseTenMinutes] = useState(true);
-  const [elapsed, setElapsed] = useState(0); // session clock
-  const [unavailable, setUnavailable] = useState({}); // {id: true} for files that 404, etc.
+  const [elapsed, setElapsed] = useState(0);
+  const [unavailable, setUnavailable] = useState({}); // {id: true}
 
   const audioRef = useRef(null);
   const rafRef = useRef(null);
@@ -67,7 +109,7 @@ export default function MusicPage() {
     [activeId]
   );
 
-  // Clear RAF on unmount
+  // clear RAF on unmount
   useEffect(() => {
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -82,7 +124,7 @@ export default function MusicPage() {
       const delta = (ts - started) / 1000;
       setElapsed(delta);
       if (useTenMinutes && delta >= 600) {
-        // stop at 10:00
+        // Stop exactly at 10:00
         stopPlayback();
         return;
       }
@@ -102,10 +144,11 @@ export default function MusicPage() {
     setActiveId(track.id);
     setElapsed(0);
 
+    // (re)use one audio element
     if (!audioRef.current) {
       audioRef.current = new Audio();
       audioRef.current.addEventListener("ended", () => {
-        // Loop is handled by HTMLAudioElement.loop; session clock stops at 10:00 if enabled.
+        // loop is handled by element.loop if enabled
       });
       audioRef.current.addEventListener("error", () => {
         setUnavailable((prev) => ({ ...prev, [track.id]: true }));
@@ -126,7 +169,9 @@ export default function MusicPage() {
     a.load();
 
     a.play()
-      .then(() => startSessionClock())
+      .then(() => {
+        startSessionClock();
+      })
       .catch(() => {
         setUnavailable((prev) => ({ ...prev, [track.id]: true }));
         stopPlayback();
@@ -152,6 +197,7 @@ export default function MusicPage() {
       a.currentTime = 0;
     }
     stopSessionClock();
+    setActiveId(null);
   }
 
   function setLoop(checked) {
@@ -159,6 +205,7 @@ export default function MusicPage() {
     if (audioRef.current) audioRef.current.loop = checked;
   }
 
+  // --- render ---
   return (
     <div className="page-container">
       <h2 className="section-title">Music</h2>
@@ -199,6 +246,7 @@ export default function MusicPage() {
           {TRACKS.map((t) => {
             const isActive = activeId === t.id;
             const disabled = !!unavailable[t.id];
+
             return (
               <div
                 key={t.id}
@@ -215,6 +263,11 @@ export default function MusicPage() {
                   <div className="card-title" style={{ margin: 0 }}>
                     {t.title}
                   </div>
+                  {t.credit && (
+                    <div className="note" style={{ fontSize: 12, marginTop: 2 }}>
+                      {t.credit}
+                    </div>
+                  )}
                   {disabled && (
                     <div className="note">
                       Upload pending or unavailable. {(t.srcs || []).join(" or ")}
