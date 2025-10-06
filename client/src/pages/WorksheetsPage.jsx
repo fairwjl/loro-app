@@ -554,7 +554,175 @@ function Worksheet_ProblemSolve({ onBack }) {
     </div>
   );
 }
+function Worksheet_Grounding({ onBack }) {
+  const { doc, save } = useLocalDoc("va_grounding_v1", {
+    date: new Date().toISOString().slice(0, 10),
+    situation: "",
+    five_see: ["", "", "", "", ""],
+    four_touch: ["", "", "", ""],
+    three_hear: ["", "", ""],
+    two_smell: ["", ""],
+    one_taste: "",
+    notes: "",
+    lastSavedAt: null,
+  });
+  const handlePrint = () => window.print();
+  
+  return (
+    <div>
+      <h2 className="section-title">5-4-3-2-1 Grounding</h2>
+      <p className="card-text">Use your five senses to anchor yourself in the present moment. This can help when you feel overwhelmed, disconnected, or flooded by emotions or memories.</p>
+      <PrintStyles />
+      
+      <div className="panel" style={{ marginTop: 12 }}>
+        <div className="form-row" style={{ display: "grid", gridTemplateColumns: "auto 160px", gap: 8, alignItems: "center" }}>
+          <label htmlFor="gr-date">Date</label>
+          <input id="gr-date" type="date" value={doc.date} onChange={(e) => save({ ...doc, date: e.target.value })} style={{ borderRadius: 10 }} />
+        </div>
+        
+        <div className="panel" style={{ marginTop: 12 }}>
+          <h3 className="card-title" style={{ marginBottom: 8 }}>Situation (optional)</h3>
+          <textarea rows={2} value={doc.situation} onChange={(e) => save({ ...doc, situation: e.target.value })} placeholder="What triggered the need to ground?" style={{ borderRadius: 12 }} />
+        </div>
 
+        <div className="panel" style={{ marginTop: 12 }}>
+          <h3 className="card-title" style={{ marginBottom: 8 }}>5 things you can SEE</h3>
+          {doc.five_see.map((item, idx) => (
+            <div key={`see-${idx}`} className="form-row">
+              <input type="text" value={item} onChange={(e) => {
+                const copy = [...doc.five_see];
+                copy[idx] = e.target.value;
+                save({ ...doc, five_see: copy });
+              }} placeholder={`Thing ${idx + 1}`} style={{ borderRadius: 10 }} />
+            </div>
+          ))}
+        </div>
+
+        <div className="panel" style={{ marginTop: 12 }}>
+          <h3 className="card-title" style={{ marginBottom: 8 }}>4 things you can TOUCH/FEEL</h3>
+          {doc.four_touch.map((item, idx) => (
+            <div key={`touch-${idx}`} className="form-row">
+              <input type="text" value={item} onChange={(e) => {
+                const copy = [...doc.four_touch];
+                copy[idx] = e.target.value;
+                save({ ...doc, four_touch: copy });
+              }} placeholder={`Thing ${idx + 1}`} style={{ borderRadius: 10 }} />
+            </div>
+          ))}
+        </div>
+
+        <div className="panel" style={{ marginTop: 12 }}>
+          <h3 className="card-title" style={{ marginBottom: 8 }}>3 things you can HEAR</h3>
+          {doc.three_hear.map((item, idx) => (
+            <div key={`hear-${idx}`} className="form-row">
+              <input type="text" value={item} onChange={(e) => {
+                const copy = [...doc.three_hear];
+                copy[idx] = e.target.value;
+                save({ ...doc, three_hear: copy });
+              }} placeholder={`Thing ${idx + 1}`} style={{ borderRadius: 10 }} />
+            </div>
+          ))}
+        </div>
+
+        <div className="panel" style={{ marginTop: 12 }}>
+          <h3 className="card-title" style={{ marginBottom: 8 }}>2 things you can SMELL</h3>
+          {doc.two_smell.map((item, idx) => (
+            <div key={`smell-${idx}`} className="form-row">
+              <input type="text" value={item} onChange={(e) => {
+                const copy = [...doc.two_smell];
+                copy[idx] = e.target.value;
+                save({ ...doc, two_smell: copy });
+              }} placeholder={`Thing ${idx + 1}`} style={{ borderRadius: 10 }} />
+            </div>
+          ))}
+        </div>
+
+        <div className="panel" style={{ marginTop: 12 }}>
+          <h3 className="card-title" style={{ marginBottom: 8 }}>1 thing you can TASTE</h3>
+          <input type="text" value={doc.one_taste} onChange={(e) => save({ ...doc, one_taste: e.target.value })} placeholder="What can you taste right now?" style={{ borderRadius: 10 }} />
+        </div>
+
+        <div className="panel" style={{ marginTop: 12 }}>
+          <h3 className="card-title" style={{ marginBottom: 8 }}>How do you feel now?</h3>
+          <textarea rows={3} value={doc.notes} onChange={(e) => save({ ...doc, notes: e.target.value })} placeholder="Any change in your emotional state or body sensations?" style={{ borderRadius: 12 }} />
+        </div>
+      </div>
+      
+      <Controls onSave={() => save(doc)} lastSavedAt={doc.lastSavedAt} onPrint={handlePrint} onBack={onBack} />
+      <Disclaimer />
+    </div>
+  );
+}
+function Worksheet_WindowOfTolerance({ onBack }) {
+  const { doc, save } = useLocalDoc("va_window_tolerance_v1", {
+    date: new Date().toISOString().slice(0, 10),
+    hyperarousal_signs: [""],
+    hypoarousal_signs: [""],
+    window_signs: [""],
+    upregulate_strategies: [""],
+    downregulate_strategies: [""],
+    lastSavedAt: null,
+  });
+  const handlePrint = () => window.print();
+  
+  return (
+    <div>
+      <h2 className="section-title">Window of Tolerance</h2>
+      <p className="card-text">Learn to recognize when you're outside your window of tolerance (too activated or too shut down) and identify strategies to return to your optimal zone.</p>
+      <PrintStyles />
+      
+      <div className="panel" style={{ marginTop: 12 }}>
+        <div className="form-row" style={{ display: "grid", gridTemplateColumns: "auto 160px", gap: 8, alignItems: "center" }}>
+          <label htmlFor="wot-date">Date</label>
+          <input id="wot-date" type="date" value={doc.date} onChange={(e) => save({ ...doc, date: e.target.value })} style={{ borderRadius: 10 }} />
+        </div>
+
+        <ListEditor 
+          label="Signs I'm in HYPERAROUSAL (too activated: anxious, angry, panicky, overwhelmed)" 
+          items={doc.hyperarousal_signs} 
+          onChange={(v) => save({ ...doc, hyperarousal_signs: v })} 
+          idPrefix="hyper" 
+          placeholder="e.g., racing heart, can't sit still, mind racing, irritable"
+        />
+
+        <ListEditor 
+          label="Signs I'm in HYPOAROUSAL (too shut down: numb, foggy, disconnected, depressed)" 
+          items={doc.hypoarousal_signs} 
+          onChange={(v) => save({ ...doc, hypoarousal_signs: v })} 
+          idPrefix="hypo" 
+          placeholder="e.g., can't think clearly, feel nothing, exhausted, spaced out"
+        />
+
+        <ListEditor 
+          label="Signs I'm in my WINDOW (balanced: present, able to think and feel)" 
+          items={doc.window_signs} 
+          onChange={(v) => save({ ...doc, window_signs: v })} 
+          idPrefix="window" 
+          placeholder="e.g., can focus, feel my feelings without being overwhelmed, hopeful"
+        />
+
+        <ListEditor 
+          label="Strategies to DOWN-REGULATE (when too activated)" 
+          items={doc.downregulate_strategies} 
+          onChange={(v) => save({ ...doc, downregulate_strategies: v })} 
+          idPrefix="down" 
+          placeholder="e.g., slow breathing, cold water on face, progressive muscle relaxation"
+        />
+
+        <ListEditor 
+          label="Strategies to UP-REGULATE (when too shut down)" 
+          items={doc.upregulate_strategies} 
+          onChange={(v) => save({ ...doc, upregulate_strategies: v })} 
+          idPrefix="up" 
+          placeholder="e.g., movement, music, call a friend, splash cold water, strong smell/taste"
+        />
+      </div>
+      
+      <Controls onSave={() => save(doc)} lastSavedAt={doc.lastSavedAt} onPrint={handlePrint} onBack={onBack} />
+      <Disclaimer />
+    </div>
+  );
+}
 /* -------------------------- Page: Menu + Router -------------------------- */
 
 export default function WorksheetsPage() {
@@ -579,16 +747,18 @@ export default function WorksheetsPage() {
           </ul>
         </div>
 
-        {/* Menu list (clickable panels) */}
-        <MenuItem label="Thought Record (ABC)" onOpen={() => setView("thoughtRecord")} />
-        <MenuItem label="Change Negative Thinking Patterns" onOpen={() => setView("cnt")} />
-        <MenuItem label="Challenging Questions (Socratic)" onOpen={() => setView("cq")} />
-        <MenuItem label="Deal with Trauma Reminders" onOpen={() => setView("triggers")} />
-        <MenuItem label="Identify Values & Goals" onOpen={() => setView("values")} />
-        <MenuItem label="Learn to Be Assertive" onOpen={() => setView("assertive")} />
-        <MenuItem label="Plan Something Enjoyable" onOpen={() => setView("enjoyable")} />
-        <MenuItem label="Write to Reflect" onOpen={() => setView("reflect")} />
-        <MenuItem label="Learn to Problem Solve" onOpen={() => setView("problemSolve")} />
+        {/* Menu list - REORDERED: Stabilization first, then cognitive work */}
+<MenuItem label="5-4-3-2-1 Grounding" onOpen={() => setView("grounding")} />
+<MenuItem label="Window of Tolerance" onOpen={() => setView("window")} />
+<MenuItem label="Deal with Trauma Reminders" onOpen={() => setView("triggers")} />
+<MenuItem label="Thought Record (ABC)" onOpen={() => setView("thoughtRecord")} />
+<MenuItem label="Change Negative Thinking Patterns" onOpen={() => setView("cnt")} />
+<MenuItem label="Challenging Questions (Socratic)" onOpen={() => setView("cq")} />
+<MenuItem label="Identify Values & Goals" onOpen={() => setView("values")} />
+<MenuItem label="Learn to Be Assertive" onOpen={() => setView("assertive")} />
+<MenuItem label="Plan Something Enjoyable" onOpen={() => setView("enjoyable")} />
+<MenuItem label="Write to Reflect" onOpen={() => setView("reflect")} />
+<MenuItem label="Learn to Problem Solve" onOpen={() => setView("problemSolve")} />
 
         <Disclaimer />
       </div>
@@ -596,8 +766,15 @@ export default function WorksheetsPage() {
   }
 
   // --- ROUTER TO WORKSHEETS ---
-  const goBack = () => setView("menu");
-  switch (view) {
+      const goBack = () => setView("menu");
+switch (view) {
+  case "grounding":
+    return <Worksheet_Grounding onBack={goBack} />;
+  case "window":
+    return <Worksheet_WindowOfTolerance onBack={goBack} />;
+  case "thoughtRecord":
+    return <ThoughtRecordDetail onBack={goBack} />;
+  // ... rest of cases
     case "thoughtRecord":
       return <ThoughtRecordDetail onBack={goBack} />;
     case "cnt":

@@ -159,9 +159,32 @@ export default function BilateralPage() {
     >
       <h2 className="section-title" style={{ color: text }}>Bilateral (Grounding)</h2>
       <p className="card-text" style={{ color: muted }}>
-        A gentle left–right focus to support grounding. This is a soothing exercise only—
-        <strong> not therapy or EMDR processing</strong>. Stop anytime if discomfort increases.
-      </p>
+  A gentle left–right focus to support grounding. This is a soothing exercise only—
+  <strong> not therapy or EMDR processing</strong>.
+</p>
+
+<div
+  style={{
+    backgroundColor: "#fff3cd",
+    border: "2px solid #856404",
+    borderRadius: 8,
+    padding: 12,
+    marginTop: 12,
+    fontSize: 14,
+    lineHeight: 1.5,
+    color: "#856404",
+  }}
+>
+  <strong>Who should NOT use this tool:</strong>
+  <ul style={{ marginTop: 8, marginBottom: 8, paddingLeft: 20 }}>
+    <li>Recent trauma (within 3 months) without therapeutic support</li>
+    <li>Active dissociative symptoms or diagnosed dissociative disorder</li>
+    <li>Unstable PTSD symptoms not currently in treatment</li>
+    <li>History of seizures or photosensitivity</li>
+  </ul>
+  <strong>Stop immediately if you experience:</strong> flashbacks, dissociation, 
+  increased anxiety, numbness, or feeling "spaced out." Contact your therapist if these occur.
+</div>
 
       {/* Controls */}
       <div className="panel" style={{ marginTop: 12, background: "#fff", border: `1px solid ${border}`, borderRadius: 16, padding: 12 }}>
@@ -170,8 +193,8 @@ export default function BilateralPage() {
           <input
             id="tempo"
             type="range"
-            min={20}
-            max={120}
+            min={40}
+            max={80}
             step={5}
             value={cpm}
             onChange={(e) => setCpm(parseInt(e.target.value, 10))}

@@ -1,225 +1,186 @@
 // client/src/pages/MusicPage.jsx
-import React, { useEffect, useMemo, useRef, useState } from "react";
-
-/**
- * MusicPage (trauma-informed, non-directive)
- * - Lists tracks and lets user play/stop
- * - Works even if some files 404 (shows 'Upload pending or unavailable')
- * - Handles filenames with spaces/& via encodeURI
- * Files must live under /public/audio so they are served at /audio/...
- */
-
-const TRACKS = [
-  {
-    id: "stone-beach-waves",
-    title: "Stone Beach Waves (ocean)",
-    // mp3 only (as provided)
-    srcs: [
-      "/audio/ES_ASMR%20Stone%20Beach%20Waves%20-%20Joseph%20Beg%20%28Version%208a7e01fe%29%20-%20fullmix_high_quality.mp3",
-    ],
-  },
-  {
-    id: "ever-so-blue",
-    title: "Calme — Ever So Blue",
-    srcs: [
-      "/audio/ES_Calme - Ever So Blue.mp3",
-      "/audio/ES_Calme - Ever So Blue.wav",
-    ],
-  },
-  {
-    id: "calming-crystals",
-    title: "Calming Crystals — Rocket Noise",
-    srcs: [
-      "/audio/ES_Calming Crystals - Rocket Noise.mp3",
-      "/audio/ES_Calming Crystals - Rocket Noise.wav",
-    ],
-  },
-  {
-    id: "calming-horizons",
-    title: "Calming Horizons — Staffan Carlen",
-    srcs: [
-      "/audio/ES_Calming Horizons - Staffan Carlen.mp3",
-      "/audio/ES_Calming Horizons - Staffan Carlen.wav",
-    ],
-  },
-  {
-    id: "raga-for-stillness",
-    title: "Raga for Stillness — Aks & Lakshmi",
-    srcs: [
-      "/audio/ES_Raga for Stillness - Aks & Lakshmi.mp3",
-      "/audio/ES_Raga for Stillness - Aks & Lakshmi.wav",
-    ],
-  },
-  {
-    id: "walk-in-the-forest",
-    title: "Walk in the Forest — Center of Attention",
-    srcs: [
-      "/audio/ES_Walk in the Forest - Center of Attention.mp3",
-      "/audio/ES_Walk in the Forest - Center of Attention.wav",
-    ],
-  },
-];
-
-function pickPlayableSrc(audioEl, srcs) {
-  const mimeByExt = (src) => {
-    if (src.endsWith(".mp3")) return "audio/mpeg";
-    if (src.endsWith(".ogg")) return "audio/ogg";
-    if (src.endsWith(".wav")) return "audio/wav";
-    return "";
-  };
-  for (const src of srcs || []) {
-    const mime = mimeByExt(src);
-    if (!mime || audioEl.canPlayType(mime)) return src;
-  }
-  return null;
-}
+import React from "react";
+import { useMusic, TRACKS } from "../contexts/MusicContext";
 
 export default function MusicPage() {
-  const [activeId, setActiveId] = useState(null);
-  const [unavailable, setUnavailable] = useState({}); // {id: true}
-  const audioRef = useRef(null);
-
-  const activeTrack = useMemo(
-    () => TRACKS.find((t) => t.id === activeId) || null,
-    [activeId]
-  );
-
-  useEffect(() => {
-    // clean up audio on unmount
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.src = "";
-        audioRef.current.load();
-      }
-    };
-  }, []);
-
-  function playTrack(track) {
-    setActiveId(track.id);
-
-    if (!audioRef.current) {
-      audioRef.current = new Audio();
-      audioRef.current.addEventListener("error", () => {
-        setUnavailable((prev) => ({ ...prev, [track.id]: true }));
-        stopPlayback();
-      });
-    }
-
-    const a = audioRef.current;
-    const src = pickPlayableSrc(a, track.srcs);
-    if (!src) {
-      setUnavailable((prev) => ({ ...prev, [track.id]: true }));
-      stopPlayback();
-      return;
-    }
-
-    a.src = encodeURI(src); // handle spaces/& etc
-    a.loop = false; // simple player for now
-    a.load();
-    a.play().catch(() => {
-      setUnavailable((prev) => ({ ...prev, [track.id]: true }));
-      stopPlayback();
-    });
-  }
-
-  function togglePlayPause() {
-    const a = audioRef.current;
-    if (!a) return;
-    if (a.paused) {
-      a.play().catch(() => {});
-    } else {
-      a.pause();
-    }
-  }
-
-  function stopPlayback() {
-    const a = audioRef.current;
-    if (a) {
-      a.pause();
-      a.currentTime = 0;
-    }
-  }
+  const { currentTrack, isPlaying, unavailable, playTrack } = useMusic();
 
   return (
     <div className="page-container">
-      <h2 className="section-title">Music</h2>
-      <p className="card-text" style={{ marginTop: -6 }}>
-        A calm space for supportive audio during breathing, meditation, or bilateral activities.
-        You choose what helps. Options here aim to be gentle and steady.
-      </p>
+      {/* Hero Section */}
+      <div className="hero-gradient" style={{ marginBottom: "2rem" }}>
+        <h1 className="hero-title">Music & Sound</h1>
+        <p className="hero-subtitle">
+          Calming audio to support grounding, breathing exercises, or quiet reflection.
+          Choose what feels right for you in this moment.
+        </p>
+      </div>
 
-      <div className="panel" style={{ padding: 12, marginTop: 12 }}>
-        <div style={{ display: "grid", gap: 10 }}>
-          {TRACKS.map((t) => {
-            const isActive = activeId === t.id;
-            const disabled = !!unavailable[t.id];
+      {/* Track List */}
+      <section>
+        <h2 className="section-heading">
+          <span>Available Tracks</span>
+        </h2>
+        <p className="section-intro">
+          Select a track to begin playing. Music will continue as you navigate through the app.
+        </p>
+
+        <div style={{ display: "grid", gap: "12px", marginTop: "1.5rem" }}>
+          {TRACKS.map((track) => {
+            const isActive = currentTrack?.id === track.id;
+            const isUnavailable = !!unavailable[track.id];
+
             return (
               <div
-                key={t.id}
-                className="panel"
+                key={track.id}
+                className="card"
                 style={{
-                  padding: 12,
                   display: "flex",
                   alignItems: "center",
-                  gap: 12,
-                  opacity: disabled ? 0.6 : 1,
+                  gap: "16px",
+                  padding: "16px 20px",
+                  opacity: isUnavailable ? 0.5 : 1,
+                  border: isActive ? "2px solid var(--accent)" : "1px solid var(--border)",
+                  background: isActive ? "var(--accent-muted)" : "var(--surface)",
                 }}
               >
-                <div style={{ flex: 1 }}>
-                  <div className="card-title" style={{ margin: 0 }}>
-                    {t.title}
+                {/* Track Icon/Type */}
+                <div
+                  style={{
+                    fontSize: "2rem",
+                    width: "48px",
+                    height: "48px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background: "var(--surface-muted)",
+                    borderRadius: "10px",
+                  }}
+                >
+                  {track.type === "Ocean Sounds" && "🌊"}
+                  {track.type === "Ambient" && "🌙"}
+                  {track.type === "Meditation" && "🧘"}
+                  {track.type === "Nature Sounds" && "🌲"}
+                </div>
+
+                {/* Track Info */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div
+                    style={{
+                      fontWeight: "500",
+                      color: "var(--text)",
+                      fontSize: "1rem",
+                      marginBottom: "4px",
+                    }}
+                  >
+                    {track.title}
                   </div>
-                  {disabled && (
-                    <div className="note">
-                      Upload pending or unavailable. {(t.srcs || []).join(" or ")}
+                  <div
+                    style={{
+                      fontSize: "0.875rem",
+                      color: "var(--text-muted)",
+                    }}
+                  >
+                    {track.artist} • {track.type}
+                  </div>
+                  {isUnavailable && (
+                    <div className="note" style={{ marginTop: "4px", color: "#e53e3e" }}>
+                      Track unavailable
+                    </div>
+                  )}
+                  {isActive && isPlaying && (
+                    <div style={{ marginTop: "4px", fontSize: "0.85rem", color: "var(--accent)" }}>
+                      ▶ Now playing
                     </div>
                   )}
                 </div>
 
-                {!isActive ? (
+                {/* Play Button */}
+                {!isActive && (
                   <button
                     className="btn btn-primary"
-                    onClick={() => !disabled && playTrack(t)}
-                    disabled={disabled}
-                    aria-label={`Play ${t.title}`}
+                    onClick={() => !isUnavailable && playTrack(track)}
+                    disabled={isUnavailable}
+                    aria-label={`Play ${track.title}`}
+                    style={{ minWidth: "80px" }}
                   >
                     Play
                   </button>
-                ) : (
-                  <>
-                    <button
-                      className="btn"
-                      onClick={togglePlayPause}
-                      aria-label="Play/pause"
-                      style={{ minWidth: 92 }}
-                    >
-                      Play/Pause
-                    </button>
-                    <button className="btn" onClick={stopPlayback} aria-label="Stop">
-                      Stop
-                    </button>
-                  </>
+                )}
+                {isActive && (
+                  <div
+                    style={{
+                      padding: "8px 16px",
+                      background: "var(--accent)",
+                      color: "white",
+                      borderRadius: "8px",
+                      fontSize: "0.875rem",
+                      fontWeight: "500",
+                    }}
+                  >
+                    Playing
+                  </div>
                 )}
               </div>
             );
           })}
         </div>
-      </div>
+      </section>
 
+      {/* Music Attribution */}
+      <section style={{ marginTop: "3rem" }}>
+        <div
+          className="panel"
+          style={{
+            background: "var(--surface-muted)",
+            padding: "1.5rem",
+          }}
+        >
+          <h3
+            style={{
+              fontSize: "1rem",
+              fontWeight: "600",
+              color: "var(--text)",
+              marginBottom: "1rem",
+            }}
+          >
+            Music Credits
+          </h3>
+          <p style={{ fontSize: "0.875rem", color: "var(--text-muted)", marginBottom: "1rem" }}>
+            All music provided by{" "}
+            <a
+              href="https://www.epidemicsound.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "var(--accent)", textDecoration: "underline" }}
+            >
+              Epidemic Sound
+            </a>
+          </p>
+          <div style={{ display: "grid", gap: "8px", fontSize: "0.85rem", color: "var(--text-muted)" }}>
+            {TRACKS.map((track) => (
+              <div key={track.id}>
+                <strong style={{ color: "var(--text)" }}>{track.title}</strong> by {track.artist}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Disclaimer */}
       <div
         className="panel"
         style={{
-          marginTop: 16,
-          fontSize: 12,
+          marginTop: "2rem",
+          fontSize: "0.875rem",
           color: "var(--text-muted)",
           background: "var(--surface-muted)",
         }}
       >
         <p style={{ margin: "4px 0" }}>
-          This feature supports grounding and self-regulation. It isn’t medical advice or therapy.
-          If you’re in crisis, call <strong>911</strong> (U.S.), dial or text <strong>988</strong>,
-          or use your local emergency number.
+          This feature supports grounding and self-regulation. It isn't medical advice or therapy. If
+          you're in crisis, call <strong>911</strong> (U.S.), dial or text <strong>988</strong>, or use
+          your local emergency number.
         </p>
       </div>
     </div>

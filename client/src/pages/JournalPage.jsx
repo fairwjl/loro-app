@@ -15,16 +15,18 @@ const LS_KEY_LASTSAVED = "journal.lastsaved.v1";
 const LS_KEY_PROMPTS_ON = "journal.promptsOn.v1";
 const LS_KEY_ENTRIES = "journal.entries.v1"; // saved snapshots array
 
-// Gentle, non-clinical prompts
+// Gentle, trauma-informed prompts
 const PROMPTS = [
-  "Name one small thing that went okay (or was less hard) today.",
-  "What helped even a little? A person, place, activity, or thought?",
-  "What do you need more of this week? What do you need less of?",
-  "If a close friend felt how you feel now, what would you tell them?",
-  "What is one kind thing you can do for yourself in the next 24 hours?",
-  "Name one feeling present right now. Where do you notice it in your body?",
-  "What mattered to you today, even if it was tiny?",
-  "What is one boundary you kept today (or want to try next time)?",
+  "What is one thing you noticed today (something you saw, heard, felt, or experienced)?",
+  "Name something that felt even slightly less difficult than yesterday. If nothing did, that's okay too.",
+  "What do you need right now? (It's okay if you don't know or if it feels impossible.)",
+  "If you're feeling stuck, what would you say to someone else who felt this way?",
+  "Describe where you are right now using your five senses (what you see, hear, feel, smell, taste).",
+  "What emotion is strongest right now? Where do you notice it in your body? (No need to change it, just notice.)",
+  "What mattered to you today, even if it was very small?",
+  "What is one boundary you want to set (or tried to set) recently?",
+  "Today was _____ (fill in the blank with one word, any word).",
+  "What do you wish someone understood about how you're feeling?",
 ];
 
 export default function JournalPage() {
@@ -159,7 +161,7 @@ export default function JournalPage() {
   }
 
   function clearEntry() {
-    if (!confirm("Clear title and text? This cannot be undone.")) return;
+    if (!confirm("Clear the current draft? (Your saved entries will not be affected.)")) return;
     setTitle("");
     setBody("");
   }
@@ -214,10 +216,27 @@ export default function JournalPage() {
         You can export or print anytime.
       </p>
 
+      <div
+        style={{
+          backgroundColor: "#fff3cd",
+          border: "2px solid #856404",
+          borderRadius: 8,
+          padding: 12,
+          marginTop: 12,
+          fontSize: 14,
+          lineHeight: 1.5,
+          color: "#856404",
+        }}
+      >
+        <strong>If emotions become overwhelming while writing:</strong> It's okay to stop, close this page, 
+        and use a grounding tool instead (like 5-4-3-2-1 or paced breathing). You can always come back later. 
+        Writing about trauma without support can sometimes increase distress rather than relieve it.
+      </div>
+
       <p className="journal-note">
         Use gentle prompts as optional cues to support reflection and grounding.
         Use them only if helpful. You can enable them by checking the
-        {" "}“Show gentle prompts”{" "}box and disable them by unchecking the box.
+        {" "}"Show gentle prompts"{" "}box and disable them by unchecking the box.
       </p>
 
       <div className="panel" style={{ padding: 16 }}>
@@ -248,6 +267,9 @@ export default function JournalPage() {
               >
                 {running ? "Pause" : "Start"} timer
               </button>
+              <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>
+                (Optional - some find this helpful, others don't. Use only if it works for you.)
+              </div>
             </div>
           </div>
         </div>
@@ -380,7 +402,7 @@ export default function JournalPage() {
         </p>
         <p style={{ margin: "4px 0" }}>
           <strong>Support:</strong> Journaling is for self-reflection and education and is
-          <em> not</em> medical advice or therapy. If you’re in crisis, call <strong>911</strong> (U.S.),
+          <em> not</em> medical advice or therapy. If you're in crisis, call <strong>911</strong> (U.S.),
           dial or text <strong>988</strong>, or use your local emergency number.
         </p>
       </div>

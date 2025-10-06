@@ -166,8 +166,31 @@ useEffect(() => {
     >
       <h2 className="section-title">Breathing</h2>
       <p className="card-text">
-        Paced breathing can help settle the nervous system. Choose a pattern, then press Start.
-      </p>
+  Paced breathing can help settle the nervous system. Choose a pattern, then press Start.
+</p>
+
+<div
+  style={{
+    backgroundColor: "#fff3cd",
+    border: "2px solid #856404",
+    borderRadius: 8,
+    padding: 12,
+    marginTop: 12,
+    fontSize: 14,
+    lineHeight: 1.5,
+    color: "#856404",
+  }}
+>
+  <strong>Important:</strong> For some people, focused breathing can increase anxiety, cause dizziness, 
+  or trigger uncomfortable body sensations. This is a normal response for some nervous systems.
+  <ul style={{ marginTop: 8, marginBottom: 8, paddingLeft: 20 }}>
+    <li>Start with just 1-2 minutes to see how your body responds</li>
+    <li>Stop immediately if you feel lightheaded, panicky, or disconnected</li>
+    <li>If breathing exercises don't feel right, try other grounding methods instead</li>
+  </ul>
+  <strong>Skip this tool if:</strong> You have panic disorder, recent trauma involving breathing/choking, 
+  or notice that focusing on your breath makes anxiety worse rather than better.
+</div>
 
       {/* Controls */}
       <div
@@ -310,7 +333,17 @@ useEffect(() => {
           </div>
         )}
       </div>
-
+<div style={{ 
+  marginTop: 12, 
+  padding: 10, 
+  backgroundColor: 'var(--surface-muted)', 
+  border: '1px solid var(--border)', 
+  borderRadius: 8,
+  fontSize: 13,
+  color: 'var(--text-muted)'
+}}>
+  Remember: You can stop anytime. If this doesn't feel helpful, that's okay—different tools work for different people.
+</div>
       {/* Compact reminder */}
       <div
         style={{

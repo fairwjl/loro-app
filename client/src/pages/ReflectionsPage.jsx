@@ -5,6 +5,19 @@ import { useState } from "react";
 const API_BASE =
   import.meta.env.VITE_API_BASE?.replace(/\/$/, "") || "http://localhost:8787";
 
+const CRISIS_KEYWORDS = [
+  'kill myself', 'suicide', 'suicidal', 'end my life', 'want to die',
+  'better off dead', 'no reason to live', 'can\'t go on',
+  'hurt myself', 'self harm', 'cutting', 'overdose',
+  'kill him', 'kill her', 'kill them', 'hurt someone', 'murder',
+  'abuse', 'molest', 'rape', 'sexual abuse'
+];
+
+function containsCrisisContent(text) {
+  const lower = text.toLowerCase();
+  return CRISIS_KEYWORDS.some(keyword => lower.includes(keyword));
+}
+
 export default function Journal() {
   const [text, setText] = useState("");
   const [reply, setReply] = useState("");
@@ -13,6 +26,25 @@ export default function Journal() {
 
   async function reflect() {
     if (!text.trim() || loading) return;
+    
+    // Check for crisis content
+    if (containsCrisisContent(text)) {
+      setError("");
+      setReply("");
+      setReply(
+        "I noticed your entry contains content that may indicate you're in crisis. " +
+        "This reflection tool is not designed for crisis situations and cannot provide appropriate support.\n\n" +
+        "If you're thinking about harming yourself or others, please:\n" +
+        "• Call 911 (U.S.) or your local emergency number\n" +
+        "• Call or text 988 (Suicide & Crisis Lifeline)\n" +
+        "• Contact your therapist immediately\n" +
+        "• Go to your nearest emergency room\n\n" +
+        "Your entry has NOT been sent or saved."
+      );
+      setText(""); // Clear the input
+      return;
+    }
+    
     setLoading(true);
     setError("");
     setReply("");
@@ -32,7 +64,7 @@ export default function Journal() {
       const data = await res.json();
       setReply(data.reflection || "");
     } catch (e) {
-      setError("Sorry, I couldn’t generate a reflection right now.");
+      setError("Sorry, I couldn't generate a reflection right now.");
     } finally {
       setLoading(false);
     }
@@ -46,11 +78,27 @@ export default function Journal() {
         grounded in supportive, evidence-informed guidance.
       </p>
 
-      {/* NEW: gentle safety microcopy */}
       <p className="note" style={{ marginTop: 6, color: "#4a5e54" }}>
-        If emotions rise while writing, it’s okay to pause and try a grounding step
+        If emotions rise while writing, it's okay to pause and try a grounding step
         (for example, 5-4-3-2-1, a short walk, or a few slow breaths). Resume when ready.
       </p>
+
+      <div
+        style={{
+          backgroundColor: "var(--accent-muted)",
+          border: "1px solid var(--accent)",
+          borderRadius: 8,
+          padding: 12,
+          marginTop: 12,
+          fontSize: 14,
+          lineHeight: 1.5,
+          color: "var(--text)",
+        }}
+      >
+        <strong>This is not crisis support:</strong> Entries indicating harm to self or others 
+        will be blocked and not processed. This tool is for general reflection only. 
+        For crisis support, call 911 or text/call 988.
+      </div>
 
       <div className="panel">
         <div className="form-row">
@@ -87,12 +135,11 @@ export default function Journal() {
         {reply && (
           <div className="panel" style={{ marginTop: 16 }}>
             <h3 className="card-title">Your Reflection</h3>
-            <p className="card-text">{reply}</p>
+            <p className="card-text" style={{ whiteSpace: "pre-wrap" }}>{reply}</p>
           </div>
         )}
       </div>
 
-      {/* ---------- LEGAL DISCLAIMER (compact, at bottom) ---------- */}
       <div
         style={{
           backgroundColor: "#f7f7f7",
@@ -115,18 +162,10 @@ export default function Journal() {
         .
         <br />
         <br />
-        If you are experiencing a crisis or thinking about harming yourself or
-        others, call <strong>911</strong> in the U.S., dial or text{" "}
-        <strong>988</strong> for the Suicide &amp; Crisis Lifeline, or use your
-        local emergency number immediately.
-        <br />
-        <br />
         Do not enter personal identifiers or Protected Health Information (PHI).
         Always consult a qualified healthcare professional for diagnosis or
-        treatment of mental health conditions. By continuing, you acknowledge
-        that you understand and accept these limitations.
+        treatment of mental health conditions.
       </div>
-      {/* ---------- END DISCLAIMER ---------- */}
     </div>
   );
 }

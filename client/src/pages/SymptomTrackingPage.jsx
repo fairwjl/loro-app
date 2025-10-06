@@ -42,7 +42,7 @@ const PCL5_ITEMS = [
   "Trouble experiencing positive feelings (for example, being unable to feel happiness or have loving feelings for people close to you)?",
   "Irritable behavior, angry outbursts, or acting aggressively?",
   "Taking too many risks or doing things that could cause you harm?",
-  "Being “superalert,” watchful, or on guard?",
+  "Being \"superalert,\" watchful, or on guard?",
   "Feeling jumpy or easily startled?",
   "Having difficulty concentrating?",
   "Trouble falling or staying asleep?",
@@ -53,21 +53,21 @@ const PCL5_ITEMS = [
 // Public-domain wording available via VA materials.
 // 15 statements, 1–7 Likert; some are reverse-coded.
 const PMBS_ITEMS = [
-  "I don’t feel safe anywhere anymore",
+  "I don't feel safe anywhere anymore",
   "Other people can be genuinely loving toward me",
   "I am a good person",
   "The world is very dangerous",
-  "I don’t trust anyone anymore",
+  "I don't trust anyone anymore",
   "It is possible for me to have close and loving feelings with other people",
   "I trust my own judgment",
   "I avoid other people because they might hurt me",
   "I have lost respect for myself",
-  "I don’t feel confident that I can make good decisions for myself",
+  "I don't feel confident that I can make good decisions for myself",
   "Some people can be trusted",
-  "Because I don’t feel able to protect myself, I have lost my sense of freedom",
+  "Because I don't feel able to protect myself, I have lost my sense of freedom",
   "I feel as though I can depend on other people",
   "Most people are basically caring",
-  "I comfort myself very well when I’m upset",
+  "I comfort myself very well when I'm upset",
 ];
 
 // Reverse-coded indices for PMBS (0-based): items 2,3,6,7,11,13,14,15
@@ -352,6 +352,23 @@ export default function SymptomTrackingPage() {
         are not a diagnosis or medical advice.
       </p>
 
+      <div
+        style={{
+          backgroundColor: "var(--accent-muted)",
+          border: "1px solid var(--accent)",
+          borderRadius: 8,
+          padding: 12,
+          marginTop: 12,
+          fontSize: 14,
+          lineHeight: 1.5,
+          color: "var(--text)",
+        }}
+      >
+        <strong>About these measures:</strong> These are validated screening tools, not diagnostic instruments. 
+        Scores can help you notice patterns over time. If you notice significant increases in your scores, 
+        or if symptoms interfere with daily functioning, discuss results with your therapist or healthcare provider.
+      </div>
+
       {/* Tool switcher */}
       <div className="panel" style={{ padding: 12, marginTop: 8 }}>
         <label htmlFor="tool" className="card-text" style={{ display: "block", marginBottom: 6 }}>
@@ -377,7 +394,7 @@ export default function SymptomTrackingPage() {
             <div className="note">Total: <strong>{pclMonthTotal}</strong> (0–80)</div>
           </div>
           <p className="card-text" style={{ marginTop: 0 }}>
-            This checklist can help you notice patterns over time. If you’re in crisis, call <strong>911</strong> (U.S.) or dial/text <strong>988</strong>, or use your local emergency number.
+            This checklist can help you notice patterns over time. If you're in crisis, call <strong>911</strong> (U.S.) or dial/text <strong>988</strong>, or use your local emergency number.
           </p>
 
           <div style={{ display: "grid", gap: 14, marginTop: 10 }}>
@@ -411,9 +428,23 @@ export default function SymptomTrackingPage() {
               rows={4}
               value={pclMonthNotes}
               onChange={(e) => setPclMonthNotes(e.target.value)}
-              placeholder="Anything you want to remember about today’s check-in…"
+              placeholder="Anything you want to remember about today's check-in…"
             />
           </div>
+
+          {pclMonthTotal >= 33 && (
+            <div style={{ 
+              marginTop: 12, 
+              padding: 10, 
+              backgroundColor: 'var(--accent-muted)', 
+              border: '1px solid var(--accent)', 
+              borderRadius: 8,
+              fontSize: 14,
+              color: 'var(--text)'
+            }}>
+              <strong>Score interpretation:</strong> Scores ≥33 may indicate clinical-level symptoms. Consider discussing these results with your therapist.
+            </div>
+          )}
 
           <div className="controls-row" style={{ marginTop: 12, flexWrap: "wrap" }}>
             <button className="btn btn-primary" onClick={() => savePcl("month")} disabled={!pclMonthAllAnswered}>
@@ -443,7 +474,7 @@ export default function SymptomTrackingPage() {
             <div className="note">Total: <strong>{pclWeekTotal}</strong> (0–80)</div>
           </div>
           <p className="card-text" style={{ marginTop: 0 }}>
-            A shorter timeframe can help some people track changes more closely week to week. If you’re in crisis, call <strong>911</strong> (U.S.) or dial/text <strong>988</strong>.
+            A shorter timeframe can help some people track changes more closely week to week. If you're in crisis, call <strong>911</strong> (U.S.) or dial/text <strong>988</strong>.
           </p>
 
           <div style={{ display: "grid", gap: 14, marginTop: 10 }}>
@@ -477,9 +508,23 @@ export default function SymptomTrackingPage() {
               rows={4}
               value={pclWeekNotes}
               onChange={(e) => setPclWeekNotes(e.target.value)}
-              placeholder="Anything you want to remember about today’s check-in…"
+              placeholder="Anything you want to remember about today's check-in…"
             />
           </div>
+
+          {pclWeekTotal >= 33 && (
+            <div style={{ 
+              marginTop: 12, 
+              padding: 10, 
+              backgroundColor: 'var(--accent-muted)', 
+              border: '1px solid var(--accent)', 
+              borderRadius: 8,
+              fontSize: 14,
+              color: 'var(--text)'
+            }}>
+              <strong>Score interpretation:</strong> Scores ≥33 may indicate clinical-level symptoms. Consider discussing these results with your therapist.
+            </div>
+          )}
 
           <div className="controls-row" style={{ marginTop: 12, flexWrap: "wrap" }}>
             <button className="btn btn-primary" onClick={() => savePcl("week")} disabled={!pclWeekAllAnswered}>
@@ -506,7 +551,7 @@ export default function SymptomTrackingPage() {
         <div className="panel" style={{ padding: 16, marginTop: 12 }}>
           <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 8 }}>
             <h3 className="card-title" style={{ margin: 0 }}>Trauma-Related Beliefs (PMBS)</h3>
-            <div className="note">Total: <strong>{pmbsSum}</strong> (higher = more maladaptive)</div>
+            <div className="note">Total: <strong>{pmbsSum}</strong> (range: 15-105)</div>
           </div>
           <p className="card-text" style={{ marginTop: 0 }}>
             The PMBS can help you notice trauma-related beliefs and track how they shift over time. Answers are private to your device.
@@ -538,6 +583,20 @@ export default function SymptomTrackingPage() {
               </div>
             ))}
           </div>
+
+          {pmbsSum >= 60 && (
+            <div style={{ 
+              marginTop: 12, 
+              padding: 10, 
+              backgroundColor: 'var(--accent-muted)', 
+              border: '1px solid var(--accent)', 
+              borderRadius: 8,
+              fontSize: 14,
+              color: 'var(--text)'
+            }}>
+              <strong>Score interpretation:</strong> Elevated trauma-related beliefs. Consider reviewing these patterns with your therapist.
+            </div>
+          )}
 
           <div className="controls-row" style={{ marginTop: 12, flexWrap: "wrap" }}>
             <button className="btn btn-primary" onClick={savePmbs} disabled={!pmbsAllAnswered}>
@@ -581,7 +640,7 @@ export default function SymptomTrackingPage() {
                             <div style={{ fontSize: 12, color: "var(--text-muted)" }}>Item {i + 1}</div>
                             <div style={{ fontWeight: 600, color: "var(--text)" }}>{v}</div>
                           </div>
-                        ))}
+                          ))}
                       </div>
                     </details>
                     <div style={{ marginTop: 8, display: "flex", gap: 8 }}>
@@ -607,7 +666,7 @@ export default function SymptomTrackingPage() {
       >
         <p style={{ margin: "4px 0" }}>
           These tools support reflection and education. They are not a diagnosis or medical advice.
-          If you’re in crisis, call <strong>911</strong> (U.S.), dial or text <strong>988</strong>, or use your local emergency number.
+          If you're in crisis, call <strong>911</strong> (U.S.), dial or text <strong>988</strong>, or use your local emergency number.
         </p>
       </div>
     </div>

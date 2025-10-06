@@ -252,6 +252,23 @@ export default function SafetyPlanPage() {
         <em>self-management and education only</em> and does not replace professional care.
       </p>
 
+      <div
+        style={{
+          backgroundColor: "var(--accent-muted)",
+          border: "1px solid var(--accent)",
+          borderRadius: 8,
+          padding: 12,
+          marginTop: 12,
+          fontSize: 14,
+          lineHeight: 1.45,
+          color: "var(--text)",
+        }}
+      >
+        <strong>Privacy note:</strong> Your safety plan is stored unencrypted on this device only. 
+        If others have access to this device, consider using device-level security (passcode/biometric lock) 
+        or keeping a printed copy in a secure location.
+      </div>
+
       <form
         className="panel"
         onSubmit={(e) => e.preventDefault()}
@@ -278,7 +295,7 @@ export default function SafetyPlanPage() {
           value={plan.placesForDistraction}
           onChange={(v) => save({ ...plan, placesForDistraction: v })}
           idPrefix="pp"
-          placeholder="e.g., friend’s house, park, coffee shop"
+          placeholder="e.g., friend's house, park, coffee shop"
         />
 
         <PeopleEditor
